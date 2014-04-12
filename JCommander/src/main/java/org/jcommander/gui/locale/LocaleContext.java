@@ -31,6 +31,7 @@ public class LocaleContext {
 	private ResourceBundle bundle;
 	private String baseName;
 
+	
 	/**
 	 * 
 	 */
@@ -62,20 +63,20 @@ public class LocaleContext {
 			return;
 		}
 
-		// get resource bundle for this locale.
-		File file = new File("src/main/resources/locale");
-		
-		URL[] urls = new URL[1];
-		try {
-			urls[0] = file.toURI().toURL();
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
-		ClassLoader loader = new URLClassLoader(urls);
-		ResourceBundle bundle = ResourceBundle.getBundle(baseName, locale, loader);
+//		// get resource bundle for this locale.
+//		File file = new File(LanguageManager.LOCALE_PATH_RESOURCE);
+//		
+//		URL[] urls = new URL[1];
+//		try {
+//			urls[0] = file.toURI().toURL();
+//		} catch (MalformedURLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		
+//		
+//		ClassLoader loader = new URLClassLoader(urls);
+		ResourceBundle bundle = ResourceBundle.getBundle(baseName, locale, LocaleUtils.LOCALE_CLASS_LOADER);
 		if (bundle == null) {
 			throw new IllegalArgumentException("No resource bundle for: "
 						+ locale.getLanguage());
@@ -126,9 +127,8 @@ public class LocaleContext {
 	public static LocaleContext getContext(){
 		
 		if(localeContext == null){
-			localeContext = new LocaleContext("guiLocale");
+			localeContext = new LocaleContext(LocaleUtils.LOCALE_BASE_NAME);
 			Locale locale = Locale.getDefault();
-			locale = new Locale("en");
 			localeContext.setLocale(locale);
 			return localeContext;
 		}else{

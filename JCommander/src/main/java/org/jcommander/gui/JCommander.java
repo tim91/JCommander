@@ -1,14 +1,17 @@
 package org.jcommander.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Iterator;
+import java.util.Locale;
 
 import javax.swing.Box;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -21,11 +24,17 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import org.jcommander.gui.components.LocaleJMenu;
-import org.jcommander.gui.components.LocaleJMenuItem;
+import org.apache.log4j.Logger;
+import org.jcommander.gui.locale.LocaleContext;
+import org.jcommander.gui.locale.LocaleSelectorJMenuItem;
+import org.jcommander.gui.locale.LocaleUtils;
+import org.jcommander.gui.locale.components.LocaleJMenu;
+import org.jcommander.gui.locale.components.LocaleJMenuItem;
 
 public class JCommander {
-
+	
+	static Logger logger = Logger.getLogger("org.jcommander.gui.JCommander");
+	
 	public static void main(String[] args) {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -76,14 +85,37 @@ public class JCommander {
 			}
 		});
 		fileMenu.add(closeItem);
-
+		
 		final JMenuBar menuBar = new JMenuBar();
 		menuBar.add(fileMenu);
 		menuBar.add(new LocaleJMenu("mark"));
 		menuBar.add(new LocaleJMenu("commands"));
 		menuBar.add(new LocaleJMenu("networks"));
 		menuBar.add(new LocaleJMenu("view"));
-		menuBar.add(new LocaleJMenu("configuration"));
+		
+		
+		final JMenu fileMenuConf = new LocaleJMenu("configuration");
+		final JMenu langItem = new LocaleJMenu("configuration.language");
+		Iterator<Locale> langs = LocaleUtils.getAvailableLanguages();
+		while(langs.hasNext()){
+			Locale lang = langs.next();
+			final JMenuItem l = new LocaleSelectorJMenuItem(lang);
+			
+			l.addActionListener(new ActionListener() {
+				
+				public void actionPerformed(ActionEvent arg0) {
+					Locale selectedLocale = l.getLocale();
+					LocaleContext.getContext().setLocale(selectedLocale);
+					
+				}
+			});
+			
+			langItem.add(l);
+		}
+		
+		
+		fileMenuConf.add(langItem);
+		menuBar.add(fileMenuConf);
 		menuBar.add(new LocaleJMenu("start"));
 		menuBar.add(Box.createHorizontalGlue());
 		menuBar.add(new LocaleJMenu("help"));
