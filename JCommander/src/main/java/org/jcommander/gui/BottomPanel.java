@@ -1,12 +1,10 @@
 package org.jcommander.gui;
 
-import java.awt.Dimension;
 import java.awt.GridLayout;
 
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JSeparator;
-import javax.swing.SwingConstants;
 
 import org.jcommander.gui.locale.components.LocaleJButtonForBottomPanel;
 
@@ -20,6 +18,8 @@ public class BottomPanel extends JPanel {
 		this.setLayout(new GridLayout(2, 1));
 		
 		JPanel top = new JPanel();
+		top.setLayout(new GridLayout(1, 3));
+		top.add(new JLabel("sdfsdf"));
 		
 		
 		/*
