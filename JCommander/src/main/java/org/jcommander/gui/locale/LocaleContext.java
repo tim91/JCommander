@@ -129,6 +129,7 @@ public class LocaleContext {
 		if(localeContext == null){
 			localeContext = new LocaleContext(LocaleUtils.LOCALE_BASE_NAME);
 			Locale locale = Locale.getDefault();
+			locale = new Locale("en");
 			localeContext.setLocale(locale);
 			return localeContext;
 		}else{

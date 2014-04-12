@@ -56,11 +56,11 @@ public class JCommander {
 	}
 
 	private JComponent createTopPanel(){
-		return new JButton("TOP");
+		return new TopPanel();
 	}
 	
 	private JComponent createBottomPanel(){
-		return new JButton("BOTTOM");
+		return new BottomPanel();
 	}
 	
 	private JComponent createCenterPanel() {
