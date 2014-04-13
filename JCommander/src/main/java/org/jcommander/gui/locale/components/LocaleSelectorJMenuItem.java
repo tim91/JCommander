@@ -1,10 +1,12 @@
-package org.jcommander.gui.locale;
+package org.jcommander.gui.locale.components;
 
 import java.util.Locale;
 
 import javax.swing.JMenuItem;
 
 import org.apache.log4j.Logger;
+import org.jcommander.gui.locale.LocaleChangeListener;
+import org.jcommander.gui.locale.LocaleContext;
 
 public class LocaleSelectorJMenuItem extends JMenuItem implements LocaleChangeListener {
 

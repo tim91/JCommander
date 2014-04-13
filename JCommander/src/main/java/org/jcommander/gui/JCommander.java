@@ -26,10 +26,10 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 import org.apache.log4j.Logger;
 import org.jcommander.gui.locale.LocaleContext;
-import org.jcommander.gui.locale.LocaleSelectorJMenuItem;
 import org.jcommander.gui.locale.LocaleUtils;
 import org.jcommander.gui.locale.components.LocaleJMenu;
 import org.jcommander.gui.locale.components.LocaleJMenuItem;
+import org.jcommander.gui.locale.components.LocaleSelectorJMenuItem;
 
 public class JCommander {
 	
@@ -64,15 +64,14 @@ public class JCommander {
 	}
 	
 	private JComponent createCenterPanel() {
-		JPanel leftPanel = new JPanel(new BorderLayout());
-        JPanel rightPanel = new JPanel(new BorderLayout());
-        leftPanel.add(new JButton("LEFT"),BorderLayout.CENTER);
-        rightPanel.add(new JButton("RIGHT"),BorderLayout.CENTER);
+		JPanel leftPanel = new ContentPanel(new BorderLayout(),ContentPanel.PanelSide.LEFT);
+        JPanel rightPanel = new ContentPanel(new BorderLayout(),ContentPanel.PanelSide.LEFT);
         final JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
         		leftPanel, rightPanel);
         splitPane.setOneTouchExpandable(true);
         splitPane.setDividerLocation(0.5);
         splitPane.setResizeWeight(0.5);
+        splitPane.setOneTouchExpandable(false);
         return splitPane;
 	}
 	
