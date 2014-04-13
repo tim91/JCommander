@@ -2,9 +2,11 @@ package org.jcommander.gui;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JComboBox;
@@ -19,6 +21,7 @@ import org.jcommander.core.DirectoryChangeListener;
 import org.jcommander.core.DeviceChangeListener;
 import org.jcommander.core.path.Path;
 import org.jcommander.core.system.System;
+import org.jcommander.core.util.JCommanderUtils;
 import org.jcommander.gui.locale.components.LocaleParametrizedJLabel;
 import org.jcommander.model.Device;
 import org.jcommander.model.PrototypeDevice;
@@ -31,9 +34,11 @@ public class DevicesJComboBox extends JComboBox<Device> implements DirectoryChan
 	
 	protected JComboBox<Device> comboBox = null;
 	
+	protected CustomJTabbedPane tabbedPane = null;
+	
 	protected LocaleParametrizedJLabel devicedescriptionLabel = null;
 	
-	protected DeviceChangeListener deviceChangedListener = null;
+	protected List<DeviceChangeListener> deviceChangedListener = new ArrayList<DeviceChangeListener>();
 	
 	protected Path actualVisitingPath = null;
 	
@@ -66,6 +71,12 @@ public class DevicesJComboBox extends JComboBox<Device> implements DirectoryChan
 	}
 	
 	
+	
+	
+	public void setTabbedPane(CustomJTabbedPane tabbedPane) {
+		this.tabbedPane = tabbedPane;
+	}
+
 	private class DeviceCellRenderer extends JLabel implements ListCellRenderer 
 	{
 
@@ -164,9 +175,9 @@ public class DevicesJComboBox extends JComboBox<Device> implements DirectoryChan
 					devicedescriptionLabel.setValues(params);
 					
 					if(actualVisitingPath.getDevice().equals(device)){
-						deviceChangedListener.changeElementsInTabPanel(actualVisitingPath);
+						notifyListeners(actualVisitingPath);
 					}else{
-						deviceChangedListener.changeElementsInTabPanel(device.getPath());
+						notifyListeners(device.getPath());
 						actualVisitingPath = device.getPath();
 					}
 					
@@ -180,14 +191,27 @@ public class DevicesJComboBox extends JComboBox<Device> implements DirectoryChan
 		
 	}
 	
-	
-	
 	public void changeDeviceOnList(Path path) {
 		actualVisitingPath = path;
 		comboBox.setSelectedItem(path.getDevice());
 	}
 	
 	public void registerDeviceChangeListener(DeviceChangeListener deviceChangedListener){
-		this.deviceChangedListener = deviceChangedListener;
+		this.deviceChangedListener.add(deviceChangedListener);
+	}
+	
+	public void notifyListeners(Path p){
+		
+		logger.debug("Aktualnie zaznaczona zakladka :" + this.tabbedPane.getSelectedComponent());
+		
+		DirectoryViewJTable selected = (DirectoryViewJTable) JCommanderUtils.getSpecifiedComponentInContainer((Container) this.tabbedPane.getSelectedComponent(), "Sdf");
+		
+		for (DeviceChangeListener listener : this.deviceChangedListener) {
+			logger.debug("Listener :" + listener);
+			if((listener instanceof DirectoryViewJTable && (selected.equals(listener)))
+					||!(listener instanceof DirectoryViewJTable) ){
+				listener.changeElementsInTabPanel(p);
+			}
+		}
 	}
 }

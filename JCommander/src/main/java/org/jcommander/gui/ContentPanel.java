@@ -100,16 +100,29 @@ public class ContentPanel extends JPanel {
         }
         CustomJTabbedPane tabPanel = new CustomJTabbedPane();
         
+        devicesComboBox.setTabbedPane(tabPanel);
+        
         for (Path path : paths) {
         	JPanel center = new JPanel(new BorderLayout());
         	JButton header = new JButton("header");
         	LocaleParametrizedJLabel directoryInformation = new LocaleParametrizedJLabel("label.paramterized.directoryInformation");
         	DirectoryViewJTable djt = new DirectoryViewJTable(path,directoryInformation);
-    		djt.registerDirectoryChangeListener(devicesComboBox);
+    		
     		center.add(directoryInformation,BorderLayout.SOUTH);
     		center.add(new JScrollPane(djt),BorderLayout.CENTER);
     		center.add(header,BorderLayout.NORTH);
+    		
+    		
+    		/**
+             * Register each other before we add tab
+             */
+            djt.registerDirectoryChangeListener(devicesComboBox);
+    		devicesComboBox.registerDeviceChangeListener(djt);
+    		
             tabPanel.addTab(path.getLeaf(), center);
+            
+            
+            
 		}
         
         

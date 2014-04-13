@@ -35,8 +35,10 @@ public class CustomJTabbedPane extends JTabbedPane implements DeviceChangeListen
 	{
 		
 		public void stateChanged(ChangeEvent arg0) {
-			JTabbedPane sourceTabbedPane = (JTabbedPane) changeEvent.getSource();
-			JPanel panel = (JPanel)sourceTabbedPane.getSelectedComponent();
+			JTabbedPane sourceTabbedPane = (JTabbedPane) arg0.getSource();
+			logger.debug("Wybrano zakladke : " + sourceTabbedPane.getSelectedIndex());
+			int selectedIndex = sourceTabbedPane.getSelectedIndex();
+			JPanel panel = (JPanel)sourceTabbedPane.getComponent(selectedIndex);
 			
 			/*
 			 * We must find our directoryTable
@@ -62,6 +64,8 @@ public class CustomJTabbedPane extends JTabbedPane implements DeviceChangeListen
 		
 	}
 
+	
+	
 	public void changeElementsInTabPanel(Path path) {
 		int selected = this.getSelectedIndex();
 		this.setTitleAt(selected, path.getLeaf());
