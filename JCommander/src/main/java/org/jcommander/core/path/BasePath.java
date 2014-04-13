@@ -1,11 +1,16 @@
 package org.jcommander.core.path;
 
+import org.jcommander.model.Device;
+
 public class BasePath implements Path {
 
 	private String path = null;
 	
-	public BasePath(String path) {
+	private Device device = null;
+	
+	public BasePath(String path,Device device) {
 		this.path = path.replaceAll("/","\\\\");
+		this.device = device;
 	}
 	
 	public String getLeaf() {
@@ -17,12 +22,17 @@ public class BasePath implements Path {
 			return null;
 		}
 		
-		return el[toRet];
+		return el[toRet].toLowerCase();
 	}
 
 	public String getFullPath() {
 		// TODO Auto-generated method stub
 		return this.path;
+	}
+
+	public Device getDevice() {
+		// TODO Auto-generated method stub
+		return this.device;
 	}
 
 }

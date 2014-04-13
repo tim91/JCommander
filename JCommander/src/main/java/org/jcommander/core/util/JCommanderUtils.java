@@ -1,8 +1,18 @@
 package org.jcommander.core.util;
 
+import java.awt.Component;
+import java.awt.Container;
+
+import javax.swing.JScrollPane;
+
+import org.apache.log4j.Logger;
+import org.jcommander.gui.DirectoryViewJTable;
+
 
 public class JCommanderUtils {
 
+	static Logger logger = Logger
+			.getLogger("org.jcommander.core.util.JCommanderUtils");
 	
 	public static String ExtractDeviceLabel(String deviceName){
 		
@@ -21,5 +31,29 @@ public class JCommanderUtils {
 		
 		return sb.toString();
 	}
+	
+	
+	public static Component getSpecifiedComponentInContainer(final Container c,String ss) {
+	    Component[] comps = c.getComponents();
+	    for (Component comp : comps) {
+	    	logger.debug(comp.getName());
+	      if (comp instanceof DirectoryViewJTable) {
+	        return comp;
+	      }
+	      if(comp instanceof Container){
+	    	  Component cc = getSpecifiedComponentInContainer((Container) comp,ss);
+	    	 if(cc!= null){
+	    		 return cc;
+	    	 }
+	      }
+	      if(comp instanceof JScrollPane){
+	    	  Component cc = getSpecifiedComponentInContainer((Container) comp,ss);
+	    	  if(cc!= null){
+		    		 return cc;
+	    	  }
+		  }
+	    }
+	    return null;
+	  }
 	
 }

@@ -5,15 +5,18 @@ import java.util.List;
 
 import org.jcommander.core.path.BasePath;
 import org.jcommander.core.path.Path;
+import org.jcommander.core.system.System;
 
 public class NewJCommanderInitializer implements JCommanderInitializer {
 
+	System system = System.getInstance();
+	
 	public List<Path> getTabsForLeftPanel() {
 		// TODO Auto-generated method stub
 		List<Path> arr = new ArrayList<Path>();
 		
-		arr.add(new BasePath("c:\\*.*"));
-		arr.add(new BasePath("d:\\*.*"));
+		arr.add(new BasePath("c:\\*.*",system.getDeviceByLabel("c")));
+		arr.add(new BasePath("d:\\*.*",system.getDeviceByLabel("d")));
 		return arr;
 	}
 
@@ -21,9 +24,8 @@ public class NewJCommanderInitializer implements JCommanderInitializer {
 		// TODO Auto-generated method stub
 		List<Path> arr = new ArrayList<Path>();
 		
-		arr.add(new BasePath("c:\\*.*"));
-		arr.add(new BasePath("d:\\*.*"));
+		arr.add(new BasePath("c:\\*.*",system.getDeviceByLabel("c")));
+		arr.add(new BasePath("d:\\*.*",system.getDeviceByLabel("d")));
 		return arr;
 	}
-
 }

@@ -52,10 +52,10 @@ public class ContentPanel extends JPanel {
 //		Object[] paramDisk = new Object[]{"os",179157596,363755516};
 		
 		LocaleParametrizedJLabel diskInformationLabel = new LocaleParametrizedJLabel("label.paramterized.diskInformation");
-		JComboBox<Device> comboBox = new DevicesJComboBox(diskInformationLabel); 
+		DevicesJComboBox devicesComboBox = new DevicesJComboBox(diskInformationLabel); 
 //		comboBox.setMinimumSize(new Dimension(0, 0));
 //		comboBox.setMaximumSize(new Dimension(((String)comboBox.getSelectedItem()).length()*5, comboBox.getHeight()));
-		gridbag.setConstraints(comboBox, cc);
+		gridbag.setConstraints(devicesComboBox, cc);
 		
 //		navigationPanel.add(comboBox);
 		
@@ -63,7 +63,7 @@ public class ContentPanel extends JPanel {
 		
 		diskInformationLabel.setMinimumSize(new Dimension(0, 0));
 		JPanel diskInformation = new JPanel(new GridLayout(1,2));
-		diskInformation.add(comboBox);
+		diskInformation.add(devicesComboBox);
 		diskInformation.add(diskInformationLabel);
 		diskInformation.setMinimumSize(new Dimension(0, 0));
 		
@@ -98,19 +98,23 @@ public class ContentPanel extends JPanel {
         }else{
         	paths = initializer.getTabsForRightPanel();
         }
-        JTabbedPane tabPanel = new JTabbedPane();
+        CustomJTabbedPane tabPanel = new CustomJTabbedPane();
         
         for (Path path : paths) {
         	JPanel center = new JPanel(new BorderLayout());
         	JButton header = new JButton("header");
         	LocaleParametrizedJLabel directoryInformation = new LocaleParametrizedJLabel("label.paramterized.directoryInformation");
-        	DirectoryJTable djt = new DirectoryJTable(path.getFullPath(),directoryInformation);
-    		
+        	DirectoryViewJTable djt = new DirectoryViewJTable(path,directoryInformation);
+    		djt.registerDirectoryChangeListener(devicesComboBox);
     		center.add(directoryInformation,BorderLayout.SOUTH);
     		center.add(new JScrollPane(djt),BorderLayout.CENTER);
     		center.add(header,BorderLayout.NORTH);
             tabPanel.addTab(path.getLeaf(), center);
 		}
+        
+        
+        
+        devicesComboBox.registerDeviceChangeListener(tabPanel);
         
         
 		this.add(navigationPanel,BorderLayout.NORTH);

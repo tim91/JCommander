@@ -4,6 +4,8 @@ import java.text.NumberFormat;
 
 import javax.swing.Icon;
 
+import org.jcommander.core.path.BasePath;
+import org.jcommander.core.path.Path;
 import org.jcommander.gui.locale.LocaleContext;
 
 public class BaseDevice implements Device {
@@ -89,16 +91,17 @@ public class BaseDevice implements Device {
 				return false;
 		} else if (!deviceName.equals(other.deviceName))
 			return false;
-		if (imageIcon == null) {
-			if (other.imageIcon != null)
-				return false;
-		} else if (!imageIcon.equals(other.imageIcon))
-			return false;
+//		if (imageIcon == null) {
+//			if (other.imageIcon != null)
+//				return false;
+//		} else if (!imageIcon.equals(other.imageIcon))
+//			return false;
 		return true;
 	}
 
-	
-
-	
-	
+	public Path getPath() {
+		// TODO Auto-generated method stub
+		String p = this.getDeviceLabel() + ":\\*.*";
+		return new BasePath(p, this);
+	}
 }

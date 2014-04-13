@@ -33,6 +33,35 @@ public class System {
 
 	}
 
+	public Device getDeviceByLabel(String lab){
+		List<File> files = Arrays.asList(File.listRoots());
+		for (File f : files) {
+			String deviceName = this.fileSystemView.getSystemDisplayName(f);
+			
+			if(deviceName == null || deviceName.length() == 0)
+				continue;
+			
+			String label = JCommanderUtils.ExtractDeviceLabel(deviceName);
+			
+			if(lab.toLowerCase().equals(label.toLowerCase())){
+				String name = JCommanderUtils.ExtractDeviceName(deviceName);
+				Icon icon = this.fileSystemView.getSystemIcon(f);
+				
+				logger.debug("Otrzymany ciag: " + deviceName);
+				logger.debug("Nazwa : " + name);
+				logger.debug("Label: " + label);
+				logger.debug("Ikona: " + icon);
+				
+				long totalSpace = f.getTotalSpace();
+				long freeSpace = f.getFreeSpace();
+				
+				return new BaseDevice(label, name, freeSpace/1024, totalSpace/1024,icon);
+			}
+			
+		}
+		return null;
+	}
+	
 	public List<Device> getDevices() {
 		List<Device> devices = new ArrayList<Device>(2);
 

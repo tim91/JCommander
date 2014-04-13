@@ -11,7 +11,7 @@ public class BasePathTest {
 		
 		String p = "c:\\*.*";
 		
-		Path pp = new BasePath(p);
+		Path pp = new BasePath(p,null);
 		
 		Assert.assertEquals("c:", pp.getLeaf());
 		Assert.assertEquals("c:\\*.*", pp.getFullPath());
@@ -19,14 +19,14 @@ public class BasePathTest {
 		
 		p = "c:\\Ala ma kota\\*.*";
 		
-		pp = new BasePath(p);
+		pp = new BasePath(p,null);
 		
 		Assert.assertEquals("Ala ma kota", pp.getLeaf());
 		Assert.assertEquals("c:\\Ala ma kota\\*.*", pp.getFullPath());
 		
 		p = "c:\\Ala ma kota\\kot ma ale\\*.*";
 		
-		pp = new BasePath(p);
+		pp = new BasePath(p,null);
 		
 		Assert.assertEquals("kot ma ale", pp.getLeaf());
 		Assert.assertEquals("c:\\Ala ma kota\\kot ma ale\\*.*", pp.getFullPath());

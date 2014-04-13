@@ -2,6 +2,8 @@ package org.jcommander.model;
 
 import javax.swing.Icon;
 
+import org.jcommander.core.path.Path;
+
 public class PrototypeDevice implements Device {
 
 	@Override
@@ -31,6 +33,11 @@ public class PrototypeDevice implements Device {
 	}
 
 	public Icon getIcon() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Path getPath() {
 		// TODO Auto-generated method stub
 		return null;
 	}

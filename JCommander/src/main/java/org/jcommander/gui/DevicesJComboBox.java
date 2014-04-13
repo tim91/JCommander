@@ -15,7 +15,9 @@ import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 
 import org.apache.log4j.Logger;
-import org.jcommander.core.system.DirectoryChangeListener;
+import org.jcommander.core.DirectoryChangeListener;
+import org.jcommander.core.DeviceChangeListener;
+import org.jcommander.core.path.Path;
 import org.jcommander.core.system.System;
 import org.jcommander.gui.locale.components.LocaleParametrizedJLabel;
 import org.jcommander.model.Device;
@@ -30,6 +32,10 @@ public class DevicesJComboBox extends JComboBox<Device> implements DirectoryChan
 	protected JComboBox<Device> comboBox = null;
 	
 	protected LocaleParametrizedJLabel devicedescriptionLabel = null;
+	
+	protected DeviceChangeListener deviceChangedListener = null;
+	
+	protected Path actualVisitingPath = null;
 	
 	public DevicesJComboBox(LocaleParametrizedJLabel deviceDescription) {
 		super();
@@ -47,7 +53,7 @@ public class DevicesJComboBox extends JComboBox<Device> implements DirectoryChan
 		 * Klasa DirectoryJTable ma za zadanie wybranie odpowiedniego dysku w zaleznosci od wyswietlaego folderu
 		 */
 		
-		this.addItemListener(new DeviceChangeListener());
+		this.addItemListener(new DeviceChangedListener());
 		this.addPopupMenuListener(new DeviceListPopup());
 		this.setBackground(Color.WHITE);
 		this.setMaximumSize(new Dimension(10,20));
@@ -91,7 +97,7 @@ public class DevicesJComboBox extends JComboBox<Device> implements DirectoryChan
 				setOpaque(false);
 			}
 			
-			logger.debug(device.toString() + " zaznaczone : " +  isSelected + " index: " + index);
+//			logger.debug(device.toString() + " zaznaczone : " +  isSelected + " index: " + index);
 			
 			return this;
 		}
@@ -136,27 +142,52 @@ public class DevicesJComboBox extends JComboBox<Device> implements DirectoryChan
 		
 	}
 	
-	private class DeviceChangeListener implements ItemListener
+	private class DeviceChangedListener implements ItemListener
 	{
 
+		private Device deselected = null;
+		
 		public void itemStateChanged(ItemEvent e) {
+			
+			if(e.getStateChange() == ItemEvent.DESELECTED)
+			{
+				this.deselected = (Device) e.getItem();
+			}
 			
 			if(e.getStateChange() == ItemEvent.SELECTED){
 				logger.debug("Wybrano dysk: " + e.getItem());
 				
 				Device device = (Device) e.getItem();
-				Object [] params = new Object[] {device.getDeviceName().toLowerCase(),device.getFreeSpace(), device.getSpace()};
 				
-				devicedescriptionLabel.setValues(params);
+				if(!device.equals(deselected)){
+					Object [] params = new Object[] {device.getDeviceName().toLowerCase(),device.getFreeSpace(), device.getSpace()};
+					devicedescriptionLabel.setValues(params);
+					
+					if(actualVisitingPath.getDevice().equals(device)){
+						deviceChangedListener.changeElementsInTabPanel(actualVisitingPath);
+					}else{
+						deviceChangedListener.changeElementsInTabPanel(device.getPath());
+						actualVisitingPath = device.getPath();
+					}
+					
+					
+				}
+				
 				
 			}
 			
 		}
 		
 	}
-
-	public void changeDeviceOnList(Device device) {
-		comboBox.setSelectedItem(device);
+	
+	
+	
+	public void changeDeviceOnList(Path path) {
+		actualVisitingPath = path;
+		comboBox.setSelectedItem(path.getDevice());
 	}
 	
+	public void registerDeviceChangeListener(DeviceChangeListener deviceChangedListener){
+		this.deviceChangedListener = deviceChangedListener;
+	}
 }
