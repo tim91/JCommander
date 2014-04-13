@@ -22,6 +22,8 @@ import org.jcommander.core.initializer.Initializer;
 import org.jcommander.core.initializer.JCommanderInitializer;
 import org.jcommander.core.path.Path;
 import org.jcommander.gui.locale.components.LocaleParametrizedJLabel;
+import org.jcommander.model.BaseDevice;
+import org.jcommander.model.Device;
 
 public class ContentPanel extends JPanel {
 	
@@ -46,18 +48,19 @@ public class ContentPanel extends JPanel {
 //		navigationPanel.setLayout(new BoxLayout(navigationPanel, BoxLayout.X_AXIS));
 		navigationPanel.setLayout(gridbag);
 		
-		String[] petStrings = { "Bird", "Cat", "Dog", "Rabbit", "Pig" };
-		JComboBox<String> comboBox = new JComboBox<String>(petStrings); 
-		comboBox.setMinimumSize(new Dimension(0, 0));
-		comboBox.setMaximumSize(new Dimension(((String)comboBox.getSelectedItem()).length()*5, comboBox.getHeight()));
+//		Device[] petStrings = { new BaseDevice("c", "1000", "392342"),new BaseDevice("d", "453", "234234") };
+//		Object[] paramDisk = new Object[]{"os",179157596,363755516};
+		
+		LocaleParametrizedJLabel diskInformationLabel = new LocaleParametrizedJLabel("label.paramterized.diskInformation");
+		JComboBox<Device> comboBox = new DevicesJComboBox(diskInformationLabel); 
+//		comboBox.setMinimumSize(new Dimension(0, 0));
+//		comboBox.setMaximumSize(new Dimension(((String)comboBox.getSelectedItem()).length()*5, comboBox.getHeight()));
 		gridbag.setConstraints(comboBox, cc);
 		
 //		navigationPanel.add(comboBox);
 		
 		
-		Object[] paramDisk = new Object[]{"os",179157596,363755516};
 		
-		JLabel diskInformationLabel = new LocaleParametrizedJLabel("label.paramterized.diskInformation",paramDisk);
 		diskInformationLabel.setMinimumSize(new Dimension(0, 0));
 		JPanel diskInformation = new JPanel(new GridLayout(1,2));
 		diskInformation.add(comboBox);
@@ -87,7 +90,7 @@ public class ContentPanel extends JPanel {
          * Here declaration of  tab panel center panel with content of directory
          */
         
-        JCommanderInitializer initializer = Initializer.getInitializer();
+        JCommanderInitializer initializer = Initializer.getInstance();
         
         List<Path> paths = null;
         if(this.panelSide == PanelSide.LEFT){
@@ -100,11 +103,9 @@ public class ContentPanel extends JPanel {
         for (Path path : paths) {
         	JPanel center = new JPanel(new BorderLayout());
         	JButton header = new JButton("header");
-        	
-        	DirectoryJTable djt = new DirectoryJTable(path.getFullPath()); 
-            
-            Object[] paramDir = djt.getDirectoryInformations();
-    		JLabel directoryInformation = new LocaleParametrizedJLabel("label.paramterized.directoryInformation",paramDir);
+        	LocaleParametrizedJLabel directoryInformation = new LocaleParametrizedJLabel("label.paramterized.directoryInformation");
+        	DirectoryJTable djt = new DirectoryJTable(path.getFullPath(),directoryInformation);
+    		
     		center.add(directoryInformation,BorderLayout.SOUTH);
     		center.add(new JScrollPane(djt),BorderLayout.CENTER);
     		center.add(header,BorderLayout.NORTH);

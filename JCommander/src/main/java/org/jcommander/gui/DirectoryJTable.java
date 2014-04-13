@@ -4,14 +4,21 @@ import javax.swing.JTable;
 
 import org.jcommander.gui.locale.LocaleChangeListener;
 import org.jcommander.gui.locale.LocaleContext;
+import org.jcommander.gui.locale.components.LocaleParametrizedJLabel;
 import org.jcommander.model.DirectoryTableModel;
 
 public class DirectoryJTable extends JTable implements LocaleChangeListener {
 	
-	public DirectoryJTable(String path) {
+	private String path = null;
+	
+	private LocaleParametrizedJLabel descriptionLabel = null;
+	
+	public DirectoryJTable(String path,LocaleParametrizedJLabel descriptionLabel) {
 	
 		this.setModel(new DirectoryTableModel());
 		LocaleContext.getContext().addContextChangeListener(this);
+		this.path = path;
+		this.descriptionLabel = descriptionLabel;
 	}
 
 	public Object[] getDirectoryInformations() {

@@ -11,6 +11,8 @@ import java.util.ResourceBundle;
 
 import javax.swing.SwingUtilities;
 
+import org.jcommander.util.exception.SingletonException;
+
 
 /**
  * A GUI context object.
@@ -33,9 +35,15 @@ public class LocaleContext {
 
 	
 	/**
+	 * @throws SingletonException 
 	 * 
 	 */
-	public LocaleContext(String baseName) {
+	public LocaleContext(String baseName) throws SingletonException {
+		
+		if(localeContext != null){
+			throw new SingletonException();
+		}
+		
 		this.baseName = baseName;
 	}
 	
@@ -127,7 +135,12 @@ public class LocaleContext {
 	public static LocaleContext getContext(){
 		
 		if(localeContext == null){
-			localeContext = new LocaleContext(LocaleUtils.LOCALE_BASE_NAME);
+			try {
+				localeContext = new LocaleContext(LocaleUtils.LOCALE_BASE_NAME);
+			} catch (SingletonException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			Locale locale = Locale.getDefault();
 			locale = new Locale("en");
 			localeContext.setLocale(locale);

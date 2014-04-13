@@ -3,6 +3,7 @@ package org.jcommander.core.initializer;
 import java.util.List;
 
 import org.jcommander.core.path.Path;
+import org.jcommander.util.exception.SingletonException;
 
 /**
  * Class responsible for returning appropriate application initializer, based on configuration
@@ -13,7 +14,11 @@ public class Initializer implements JCommanderInitializer {
 
 	public static JCommanderInitializer initializer = null;
 	
-	public Initializer() {
+	public Initializer() throws SingletonException {
+		
+		if(initializer != null){
+			throw new SingletonException();
+		}
 		
 		/*
 		 * Get information, with initializer choose
@@ -22,9 +27,15 @@ public class Initializer implements JCommanderInitializer {
 		initializer = new NewJCommanderInitializer();
 	}
 	
-	public static JCommanderInitializer getInitializer(){
+	public static JCommanderInitializer getInstance(){
 		if(initializer == null){
-			return new Initializer();
+			try {
+				return new Initializer();
+			} catch (SingletonException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return null;
+			}
 		}
 		else{
 			return initializer;

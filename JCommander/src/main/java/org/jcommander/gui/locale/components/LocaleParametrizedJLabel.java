@@ -12,14 +12,10 @@ public class LocaleParametrizedJLabel extends JLabel implements
 	private Object [] values = null;
 	private String key = null;
 	
-	public LocaleParametrizedJLabel(String key,Object [] values) {
+	public LocaleParametrizedJLabel(String key) {
 		super();
 		this.values = values;
 		this.key = key;
-		String pattern = LocaleContext.getContext().getBundle().getString(key);
-		String labelValue = String.format(LocaleContext.getContext().getLocale(),pattern,this.values);
-		this.setText(labelValue);
-		
 	}
 
 	public void localeChanged() {
@@ -31,5 +27,8 @@ public class LocaleParametrizedJLabel extends JLabel implements
 
 	public void setValues(Object[] values) {
 		this.values = values;
+		String pattern = LocaleContext.getContext().getBundle().getString(key);
+		String labelValue = String.format(LocaleContext.getContext().getLocale(),pattern,this.values);
+		this.setText(labelValue);
 	}
 }
