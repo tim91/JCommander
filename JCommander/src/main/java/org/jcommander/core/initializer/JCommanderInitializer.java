@@ -2,7 +2,7 @@ package org.jcommander.core.initializer;
 
 import java.util.List;
 
-import org.jcommander.core.path.Path;
+import org.jcommander.model.Path;
 
 public interface JCommanderInitializer {
 

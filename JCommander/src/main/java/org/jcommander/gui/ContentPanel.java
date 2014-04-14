@@ -20,10 +20,10 @@ import javax.swing.SwingConstants;
 
 import org.jcommander.core.initializer.Initializer;
 import org.jcommander.core.initializer.JCommanderInitializer;
-import org.jcommander.core.path.Path;
 import org.jcommander.gui.locale.components.LocaleParametrizedJLabel;
 import org.jcommander.model.BaseDevice;
 import org.jcommander.model.Device;
+import org.jcommander.model.Path;
 
 public class ContentPanel extends JPanel {
 	

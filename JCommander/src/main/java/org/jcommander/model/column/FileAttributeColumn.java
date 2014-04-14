@@ -2,9 +2,16 @@ package org.jcommander.model.column;
 
 public class FileAttributeColumn implements AttributeColumn {
 
-	public String getValue() {
+	private String attr;
+	
+	public FileAttributeColumn(String attribiute) {
+		this.attr = attribiute;
+	}
+
+	@Override
+	public String toString() {
 		// TODO Auto-generated method stub
-		return null;
+		return this.attr;
 	}
 
 	

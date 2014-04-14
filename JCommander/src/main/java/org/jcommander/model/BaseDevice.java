@@ -4,8 +4,6 @@ import java.text.NumberFormat;
 
 import javax.swing.Icon;
 
-import org.jcommander.core.path.BasePath;
-import org.jcommander.core.path.Path;
 import org.jcommander.gui.locale.LocaleContext;
 
 public class BaseDevice implements Device {

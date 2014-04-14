@@ -1,6 +1,8 @@
 package org.jcommander.core.system;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -12,7 +14,13 @@ import javax.swing.filechooser.FileSystemView;
 import org.apache.log4j.Logger;
 import org.jcommander.core.util.JCommanderUtils;
 import org.jcommander.model.BaseDevice;
+import org.jcommander.model.BaseDirectory;
+import org.jcommander.model.BaseFile;
+import org.jcommander.model.BasePath;
 import org.jcommander.model.Device;
+import org.jcommander.model.Directory;
+import org.jcommander.model.Path;
+import org.jcommander.util.exception.InvalidDirectoryPathException;
 import org.jcommander.util.exception.SingletonException;
 
 public class System {
@@ -106,6 +114,45 @@ public class System {
 			return system;
 		}
 
+	}
+
+
+	public Directory getDirectory(Path path) throws InvalidDirectoryPathException, FileNotFoundException {
+		
+		String p = path.getPathReadableToJava();
+		
+		File f = new File(p);
+		
+		if(!f.exists()){
+			throw new FileNotFoundException();
+		}
+		
+		if(!f.isDirectory()){
+			throw new InvalidDirectoryPathException();
+		}
+		
+		File [] files = f.listFiles();
+		
+		Directory dir = new BaseDirectory(f.getName(), f.lastModified(), "---",new BasePath(f.getAbsolutePath()));
+		
+		for (File file : files) {
+			
+			org.jcommander.model.File ff = null;
+			
+			if(file.isDirectory()){
+				ff = new BaseDirectory(file.getName(), file.lastModified(),"---", new BasePath(file.getAbsolutePath()));
+			}else if(file.isFile()){
+				String ext = "";
+				int index = file.getName().lastIndexOf(".");
+				if(index > 0){
+					ext += file.getName().substring(index);
+				}
+				ff = new BaseFile(file.getName(),ext,file.length(),file.lastModified(),"---",new BasePath(file.getAbsolutePath()));
+			}
+			dir.addFile(ff);
+		}
+		
+		return dir;
 	}
 
 }

@@ -3,9 +3,9 @@ package org.jcommander.core.initializer;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jcommander.core.path.BasePath;
-import org.jcommander.core.path.Path;
 import org.jcommander.core.system.System;
+import org.jcommander.model.BasePath;
+import org.jcommander.model.Path;
 
 /**
  * Class return information to initialize JCommander

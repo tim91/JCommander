@@ -2,6 +2,8 @@ package org.jcommander.core.path;
 
 import junit.framework.Assert;
 
+import org.jcommander.model.BasePath;
+import org.jcommander.model.Path;
 import org.junit.Test;
 
 public class BasePathTest {

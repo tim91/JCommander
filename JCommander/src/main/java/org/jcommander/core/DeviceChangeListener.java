@@ -1,6 +1,6 @@
 package org.jcommander.core;
 
-import org.jcommander.core.path.Path;
+import org.jcommander.model.Path;
 
 public interface DeviceChangeListener {
 

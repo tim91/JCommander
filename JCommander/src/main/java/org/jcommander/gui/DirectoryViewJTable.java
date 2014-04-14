@@ -1,16 +1,21 @@
 package org.jcommander.gui;
 
+import java.io.FileNotFoundException;
+
 import javax.swing.JTable;
 
 import org.apache.log4j.Logger;
 import org.jcommander.core.DirectoryChangeListener;
 import org.jcommander.core.DeviceChangeListener;
-import org.jcommander.core.path.Path;
 import org.jcommander.gui.locale.LocaleChangeListener;
 import org.jcommander.gui.locale.LocaleContext;
 import org.jcommander.gui.locale.components.LocaleParametrizedJLabel;
 import org.jcommander.model.Device;
+import org.jcommander.model.Directory;
 import org.jcommander.model.DirectoryTableModel;
+import org.jcommander.model.Path;
+import org.jcommander.util.exception.InvalidDirectoryPathException;
+import org.jcommander.core.system.System;
 
 public class DirectoryViewJTable extends JTable implements LocaleChangeListener,DeviceChangeListener{
 	
@@ -23,10 +28,12 @@ public class DirectoryViewJTable extends JTable implements LocaleChangeListener,
 	
 	private DirectoryChangeListener directoryChangeListener = null;
 	
+	private DirectoryTableModel tableModel = null;
 	
 	public DirectoryViewJTable(Path path,LocaleParametrizedJLabel descriptionLabel) {
 	
-		this.setModel(new DirectoryTableModel());
+		this.tableModel = new DirectoryTableModel(path);
+		this.setModel(tableModel);
 		LocaleContext.getContext().addContextChangeListener(this);
 		this.path = path;
 		this.descriptionLabel = descriptionLabel;
@@ -58,12 +65,29 @@ public class DirectoryViewJTable extends JTable implements LocaleChangeListener,
 		/*
 		 * We are changing path to the root of device
 		 */
-		this.path = path;
-		initializeTable();
+		
+		if(!this.path.equals(path)){
+			this.path = path;
+			insertInformationToTable();
+		}
+		
 	}
 	
-	public void initializeTable(){
-		logger.debug(super.getParent());
+	public void insertInformationToTable(){
+		logger.debug("Dodaje informacje do tabelki z widokiem folderu");
+		
+		Directory directory = null;
+		try {
+			directory = System.getInstance().getDirectory(this.path);
+		} catch (InvalidDirectoryPathException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		this.tableModel.setDirectory(directory);
 	}
 
 }

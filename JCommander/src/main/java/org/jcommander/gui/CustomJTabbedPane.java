@@ -10,9 +10,9 @@ import javax.swing.event.ChangeListener;
 
 import org.apache.log4j.Logger;
 import org.jcommander.core.DeviceChangeListener;
-import org.jcommander.core.path.Path;
 import org.jcommander.core.util.JCommanderUtils;
 import org.jcommander.model.Device;
+import org.jcommander.model.Path;
 
 public class CustomJTabbedPane extends JTabbedPane implements DeviceChangeListener {
 

@@ -2,8 +2,6 @@ package org.jcommander.model;
 
 import javax.swing.Icon;
 
-import org.jcommander.core.path.Path;
-
 public interface Device {
 
 	public String getFreeSpace();

@@ -19,11 +19,11 @@ import javax.swing.event.PopupMenuListener;
 import org.apache.log4j.Logger;
 import org.jcommander.core.DirectoryChangeListener;
 import org.jcommander.core.DeviceChangeListener;
-import org.jcommander.core.path.Path;
 import org.jcommander.core.system.System;
 import org.jcommander.core.util.JCommanderUtils;
 import org.jcommander.gui.locale.components.LocaleParametrizedJLabel;
 import org.jcommander.model.Device;
+import org.jcommander.model.Path;
 import org.jcommander.model.PrototypeDevice;
 
 public class DevicesJComboBox extends JComboBox<Device> implements DirectoryChangeListener {

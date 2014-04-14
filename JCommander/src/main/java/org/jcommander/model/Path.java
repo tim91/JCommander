@@ -1,10 +1,10 @@
-package org.jcommander.core.path;
+package org.jcommander.model;
 
-import org.jcommander.model.Device;
 
 public interface Path {
 
 	public String getLeaf();
 	public String getFullPath();
 	public Device getDevice();
+	public String getPathReadableToJava();
 }

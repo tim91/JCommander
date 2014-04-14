@@ -2,8 +2,6 @@ package org.jcommander.model;
 
 import javax.swing.Icon;
 
-import org.jcommander.core.path.Path;
-
 public class PrototypeDevice implements Device {
 
 	@Override
