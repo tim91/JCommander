@@ -15,7 +15,7 @@ import org.jcommander.model.Directory;
 import org.jcommander.model.DirectoryTableModel;
 import org.jcommander.model.Path;
 import org.jcommander.util.exception.InvalidDirectoryPathException;
-import org.jcommander.core.system.System;
+import org.jcommander.core.system.SystemService;
 
 public class DirectoryViewJTable extends JTable implements LocaleChangeListener,DeviceChangeListener{
 	
@@ -78,7 +78,7 @@ public class DirectoryViewJTable extends JTable implements LocaleChangeListener,
 		
 		Directory directory = null;
 		try {
-			directory = System.getInstance().getDirectory(this.path);
+			directory = SystemService.getInstance().getDirectory(this.path);
 		} catch (InvalidDirectoryPathException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

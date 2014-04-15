@@ -10,11 +10,11 @@ import org.jcommander.util.exception.SingletonException;
  * @author TOMEK
  *
  */
-public class Initializer implements JCommanderInitializer {
+public class InitializerService implements JCommanderInitializer {
 
 	public static JCommanderInitializer initializer = null;
 	
-	public Initializer() throws SingletonException {
+	private InitializerService() throws SingletonException {
 		
 		if(initializer != null){
 			throw new SingletonException();
@@ -24,13 +24,13 @@ public class Initializer implements JCommanderInitializer {
 		 * Get information, with initializer choose
 		 */
 		
-		initializer = new NewJCommanderInitializer();
+		initializer = new NewInitializer();
 	}
 	
 	public static JCommanderInitializer getInstance(){
 		if(initializer == null){
 			try {
-				return new Initializer();
+				return new InitializerService();
 			} catch (SingletonException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

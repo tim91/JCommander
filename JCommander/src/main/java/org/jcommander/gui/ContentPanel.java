@@ -18,7 +18,7 @@ import javax.swing.JSeparator;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingConstants;
 
-import org.jcommander.core.initializer.Initializer;
+import org.jcommander.core.initializer.InitializerService;
 import org.jcommander.core.initializer.JCommanderInitializer;
 import org.jcommander.gui.locale.components.LocaleParametrizedJLabel;
 import org.jcommander.model.BaseDevice;
@@ -90,7 +90,7 @@ public class ContentPanel extends JPanel {
          * Here declaration of  tab panel center panel with content of directory
          */
         
-        JCommanderInitializer initializer = Initializer.getInstance();
+        JCommanderInitializer initializer = InitializerService.getInstance();
         
         List<Path> paths = null;
         if(this.panelSide == PanelSide.LEFT){

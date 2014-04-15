@@ -19,7 +19,7 @@ import javax.swing.event.PopupMenuListener;
 import org.apache.log4j.Logger;
 import org.jcommander.core.DirectoryChangeListener;
 import org.jcommander.core.DeviceChangeListener;
-import org.jcommander.core.system.System;
+import org.jcommander.core.system.SystemService;
 import org.jcommander.core.util.JCommanderUtils;
 import org.jcommander.gui.locale.components.LocaleParametrizedJLabel;
 import org.jcommander.model.Device;
@@ -30,7 +30,7 @@ public class DevicesJComboBox extends JComboBox<Device> implements DirectoryChan
 
 	static Logger logger = Logger.getLogger("org.jcommander.gui.DevicesJComboBox");
 	
-	protected System system = null;
+	protected SystemService system = null;
 	
 	protected JComboBox<Device> comboBox = null;
 	
@@ -45,7 +45,7 @@ public class DevicesJComboBox extends JComboBox<Device> implements DirectoryChan
 	public DevicesJComboBox(LocaleParametrizedJLabel deviceDescription) {
 		super();
 		
-		system = System.getInstance();
+		system = SystemService.getInstance();
 		
 		this.setRenderer(new DeviceCellRenderer());
 		

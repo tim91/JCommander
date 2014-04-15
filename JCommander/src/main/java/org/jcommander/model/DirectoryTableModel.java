@@ -11,7 +11,7 @@ import org.jcommander.model.column.AttributeColumn;
 import org.jcommander.model.column.LocaleDateColumn;
 import org.jcommander.model.column.SizeColumn;
 import org.jcommander.util.exception.InvalidDirectoryPathException;
-import org.jcommander.core.system.System;
+import org.jcommander.core.system.SystemService;
 
 public class DirectoryTableModel extends AbstractTableModel {
 	
@@ -52,7 +52,7 @@ public class DirectoryTableModel extends AbstractTableModel {
 	public DirectoryTableModel(Path path) {
 		
 		try {
-			this.directory  = System.getInstance().getDirectory(path);
+			this.directory  = SystemService.getInstance().getDirectory(path);
 		} catch (InvalidDirectoryPathException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

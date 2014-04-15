@@ -38,7 +38,7 @@ public class LocaleContext {
 	 * @throws SingletonException 
 	 * 
 	 */
-	public LocaleContext(String baseName) throws SingletonException {
+	private LocaleContext(String baseName) throws SingletonException {
 		
 		if(localeContext != null){
 			throw new SingletonException();
