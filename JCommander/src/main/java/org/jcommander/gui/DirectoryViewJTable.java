@@ -9,9 +9,10 @@ import javax.swing.JTable;
 import org.apache.log4j.Logger;
 import org.jcommander.core.DeviceChangeListener;
 import org.jcommander.core.DirectoryChangeListener;
+import org.jcommander.core.action.Action;
 import org.jcommander.core.action.ActionExecuter;
-import org.jcommander.core.action.ActionExecuter.Action;
 import org.jcommander.core.action.ActionService;
+import org.jcommander.core.action.ChangeDirectoryAction;
 import org.jcommander.core.system.SystemService;
 import org.jcommander.gui.locale.LocaleChangeListener;
 import org.jcommander.gui.locale.LocaleContext;
@@ -118,7 +119,9 @@ public class DirectoryViewJTable extends JTable implements LocaleChangeListener,
 				
 				ActionExecuter ae = ActionService.getInstance().getActionExecuter(fileSelected);
 				
-				ae.performAction(fileSelected, Action.CHANGE_DIR);
+				Action action = new ChangeDirectoryAction(path, dtm.getRowComponent(row).getPath(), (DirectoryTableModel) directoryViewJTable.getModel());
+				
+				ae.executeAction(action);
 				
 				logger.debug(dtm.getRowComponent(row));
 //				logger.debug(message);

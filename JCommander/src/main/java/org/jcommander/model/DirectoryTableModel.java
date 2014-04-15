@@ -70,6 +70,12 @@ public class DirectoryTableModel extends AbstractTableModel {
 	public void setDirectory(Directory directory) {
 		//TODO teraz powinien byc refresh
 		this.directory = directory;
+		
+		/*
+		 * UPDATE
+		 */
+		fireTableDataChanged();
+		
 	}
 
 	@Override

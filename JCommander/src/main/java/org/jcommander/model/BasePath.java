@@ -72,13 +72,19 @@ public class BasePath implements Path {
 
 	public String getPathReadableToJava() {
 		// TODO Auto-generated method stub
-		int idx = this.path.lastIndexOf("\\");
 		
-		String toRet = this.path.substring(0, idx+1);
+		if(this.path.endsWith("*.*")){
+			int idx = this.path.lastIndexOf("\\");
+			
+			String toRet = this.path.substring(0, idx+1);
+			
+			logger.debug("Przeksztalcilem sciezke dla Javy z " + this.path + " na " + toRet );
+			
+			return toRet;
+		}
 		
-		logger.debug("Przeksztalcilem sciezke dla Javy z " + this.path + " na " + toRet );
-		
-		return toRet;
+		logger.debug("Przeksztalcilem sciezke dla Javy z " + this.path + " na " + this.path );
+		return this.path;
 		
 	}
 
