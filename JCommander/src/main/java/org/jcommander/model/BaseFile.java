@@ -52,4 +52,9 @@ public class BaseFile implements File{
 		return this.valuesTotable[columnIndex];
 	}
 
+	public Path getPath() {
+		// TODO Auto-generated method stub
+		return this.path;
+	}
+
 }

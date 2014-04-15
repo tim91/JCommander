@@ -83,6 +83,10 @@ public class DirectoryTableModel extends AbstractTableModel {
 		return COLUMNS.length;
 	}
 
+	public File getRowComponent(int rowIdx){
+		return this.directory.getFile(rowIdx);
+	}
+	
 	public int getRowCount() {
 		// TODO Auto-generated method stub
 		return this.directory.getFilesNum();

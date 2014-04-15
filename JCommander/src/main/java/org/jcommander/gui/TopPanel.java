@@ -16,7 +16,7 @@ public class TopPanel extends JPanel {
 	public TopPanel() {
 		super();
 		
-		this.setLayout(new FlowLayout(FlowLayout.LEFT));
+		this.setLayout(new CustomFlowLayout(FlowLayout.LEFT));
 		
 		JButton refreshButton = new LocaleJButtonForTopPanel("button.refresh");
 		

@@ -86,6 +86,7 @@ public class JCommander {
 		fileMenu.add(closeItem);
 		
 		final JMenuBar menuBar = new JMenuBar();
+		menuBar.setLayout(new CustomFlowLayout(FlowLayout.LEADING));
 		menuBar.add(fileMenu);
 		menuBar.add(new LocaleJMenu("mark"));
 		menuBar.add(new LocaleJMenu("commands"));

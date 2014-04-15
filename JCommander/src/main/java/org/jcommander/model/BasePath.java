@@ -82,6 +82,10 @@ public class BasePath implements Path {
 		
 	}
 
+	@Override
+	public String toString() {
 	
+		return this.path;
+	}
 	
 }

@@ -139,17 +139,29 @@ public class SystemService {
 			
 			org.jcommander.model.File ff = null;
 			
+			String name = file.getName();
+			if(name.contains(".")){
+				name = name.substring(0, name.lastIndexOf("."));
+			}
+			
+			if(file.isHidden())
+				continue;
+			
 			if(file.isDirectory()){
-				ff = new BaseDirectory(file.getName(), file.lastModified(),"---", new BasePath(file.getAbsolutePath()));
+				ff = new BaseDirectory(name, file.lastModified(),"---", new BasePath(file.getAbsolutePath()));
 			}else if(file.isFile()){
 				String ext = "";
 				int index = file.getName().lastIndexOf(".");
 				if(index > 0){
 					ext += file.getName().substring(index);
 				}
-				ff = new BaseFile(file.getName(),ext,file.length(),file.lastModified(),"---",new BasePath(file.getAbsolutePath()));
+				ff = new BaseFile(name,ext,file.length(),file.lastModified(),"---",new BasePath(file.getAbsolutePath()));
 			}
-			dir.addFile(ff);
+			
+			if(ff != null){
+				dir.addFile(ff);
+			}
+			
 		}
 		
 		return dir;
