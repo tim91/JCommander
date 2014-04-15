@@ -3,7 +3,7 @@ package org.jcommander.core.initializer;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jcommander.core.system.System;
+import org.jcommander.core.system.SystemService;
 import org.jcommander.model.BasePath;
 import org.jcommander.model.Path;
 
@@ -12,9 +12,9 @@ import org.jcommander.model.Path;
  * @author TOMEK
  *
  */
-public class HistoryJCommanderInitializer implements JCommanderInitializer {
+public class HistoryBasedInitializer implements JCommanderInitializer {
 
-	System system = System.getInstance();
+	SystemService system = SystemService.getInstance();
 	
 	public List<Path> getTabsForLeftPanel() {
 		// TODO Auto-generated method stub

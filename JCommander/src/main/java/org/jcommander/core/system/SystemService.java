@@ -23,15 +23,15 @@ import org.jcommander.model.Path;
 import org.jcommander.util.exception.InvalidDirectoryPathException;
 import org.jcommander.util.exception.SingletonException;
 
-public class System {
+public class SystemService {
 
 	static Logger logger = Logger.getLogger("org.jcommander.core.system.System");
 	
-	private static System system = null;
+	private static SystemService system = null;
 
 	private FileSystemView fileSystemView = null;
 
-	public System() throws SingletonException {
+	private SystemService() throws SingletonException {
 
 		if (system != null) {
 			throw new SingletonException();
@@ -100,11 +100,11 @@ public class System {
 		return devices;
 	}
 
-	public static System getInstance() {
+	public static SystemService getInstance() {
 
 		if (system == null) {
 			try {
-				return new System();
+				return new SystemService();
 			} catch (SingletonException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
