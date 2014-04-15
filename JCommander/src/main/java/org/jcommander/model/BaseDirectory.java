@@ -43,7 +43,7 @@ public class BaseDirectory extends BaseFile implements Directory {
 	@Override
 	public Object getValueByColumnIndex(int columnIndex) {
 		// TODO Auto-generated method stub
-		return super.getValueByColumnIndex(columnIndex);
+		return valuesTotable[columnIndex];
 	}
 //	
 //	public DirectoryTableRow getTableRow() {
