@@ -20,13 +20,19 @@ public class BasePath implements Path {
 	
 	public BasePath(String path,Device device) {
 		this.path = path.replaceAll("/","\\\\");
+		if(path.endsWith("*.*")){
+			int idx = this.path.lastIndexOf("\\");
+			
+			this.path = this.path.substring(0, idx+1);
+		}
+		
 		this.device = device;
 	}
 	
 	public String getLeaf() {
 		String[] el = this.path.split("\\\\");
 		
-		int toRet = el.length - 2;
+		int toRet = el.length - 1;
 		
 		if(toRet < 0){
 			return null;
@@ -70,28 +76,33 @@ public class BasePath implements Path {
 		return true;
 	}
 
-	public String getPathReadableToJava() {
-		// TODO Auto-generated method stub
-		
-		if(this.path.endsWith("*.*")){
-			int idx = this.path.lastIndexOf("\\");
-			
-			String toRet = this.path.substring(0, idx+1);
-			
-			logger.debug("Przeksztalcilem sciezke dla Javy z " + this.path + " na " + toRet );
-			
-			return toRet;
-		}
-		
-		logger.debug("Przeksztalcilem sciezke dla Javy z " + this.path + " na " + this.path );
-		return this.path;
-		
-	}
+//	public String getPathReadableToJava() {
+//		// TODO Auto-generated method stub
+//		
+//		if(this.path.endsWith("*.*")){
+//			int idx = this.path.lastIndexOf("\\");
+//			
+//			String toRet = this.path.substring(0, idx+1);
+//			
+//			logger.debug("Przeksztalcilem sciezke dla Javy z " + this.path + " na " + toRet );
+//			
+//			return toRet;
+//		}
+//		
+//		logger.debug("Przeksztalcilem sciezke dla Javy z " + this.path + " na " + this.path );
+//		return this.path;
+//		
+//	}
 
 	@Override
 	public String toString() {
 	
 		return this.path;
+	}
+
+	public String getInTotalCommanderStyle() {
+		// TODO Auto-generated method stub
+		return this.path + "*.*";
 	}
 	
 }

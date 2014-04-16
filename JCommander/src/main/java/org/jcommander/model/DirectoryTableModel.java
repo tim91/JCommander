@@ -1,28 +1,40 @@
 package org.jcommander.model;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import javax.swing.JTextField;
 import javax.swing.table.AbstractTableModel;
 
+import org.jcommander.core.DeviceChangeListener;
+import org.jcommander.core.DirectoryChangeListener;
+import org.jcommander.core.action.Action;
+import org.jcommander.core.action.ActionExecuter;
+import org.jcommander.core.action.ActionService;
+import org.jcommander.core.action.ChangeDirectoryAction;
+import org.jcommander.core.system.SystemService;
+import org.jcommander.gui.locale.LocaleChangeListener;
 import org.jcommander.gui.locale.LocaleContext;
 import org.jcommander.model.column.AttributeColumn;
 import org.jcommander.model.column.LocaleDateColumn;
 import org.jcommander.model.column.SizeColumn;
 import org.jcommander.util.exception.InvalidDirectoryPathException;
-import org.jcommander.core.system.SystemService;
 
-public class DirectoryTableModel extends AbstractTableModel {
+public class DirectoryTableModel extends AbstractTableModel implements LocaleChangeListener,DeviceChangeListener {
 	
 	public static String [] COLUMNS = new String [] {"table.column.name","table.column.extension","table.column.size",
-		"table.column.date","table.column.attribute"};
+		"table.column.date"};
 	
 	public static String DIRECTORY_SIZE = "<DIR>";
 	
+	private List<DirectoryChangeListener> directoryChangeListeners = new ArrayList<DirectoryChangeListener>();
 	
+	private Directory directory = null;
 	
-	Directory directory = null;
+	private JTextField directoryPathTextBox = null;
 	
 	public static Map<Integer,Boolean> COLUMNS_EDITABLE = new HashMap<Integer,Boolean>(){
         {
@@ -45,14 +57,19 @@ public class DirectoryTableModel extends AbstractTableModel {
     	colIndexToClass.put(4, AttributeColumn.class);
     }
     
-    public DirectoryTableModel() {
-		// TODO Auto-generated constructor stub
-	}
+//    public DirectoryTableModel() {
+//		// TODO Auto-generated constructor stub
+//	}
 	
-	public DirectoryTableModel(Path path) {
+	public DirectoryTableModel(Path path,JTextField directoryPathTextBox) {
+		
+		LocaleContext.getContext().addContextChangeListener(this);
+		
+		this.directoryPathTextBox = directoryPathTextBox;
 		
 		try {
 			this.directory  = SystemService.getInstance().getDirectory(path);
+			this.directoryPathTextBox.setText(path.getInTotalCommanderStyle());
 		} catch (InvalidDirectoryPathException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -67,9 +84,18 @@ public class DirectoryTableModel extends AbstractTableModel {
 		return directory;
 	}
 
+    public void fireTableDataChanged(){
+    	Path p = this.directory.getPath();
+    	
+    	this.directoryPathTextBox.setText(p.getInTotalCommanderStyle());
+    	
+    	super.fireTableDataChanged();
+    }
+    
 	public void setDirectory(Directory directory) {
 		//TODO teraz powinien byc refresh
 		this.directory = directory;
+		
 		
 		/*
 		 * UPDATE
@@ -113,5 +139,57 @@ public class DirectoryTableModel extends AbstractTableModel {
     public boolean isCellEditable(int rowIndex, int columnIndex) {
     	return COLUMNS_EDITABLE.get(columnIndex);
     }
+
+	public void localeChanged() {
+		
+//		int cols = this.getColumnCount();
+//		for(int i=0; i< cols; i++){
+//			String val = this.getColumnName(i);
+//			this.getColumnModel().getColumn(i).setHeaderValue(val);
+//		}
+		fireTableDataChanged();
+	}
     
+	
+	public void notifyAllDirectoryChangedListsners(){
+		for (DirectoryChangeListener el : this.directoryChangeListeners) {
+			el.onDirectoryChangeAction(this.directory.getPath());
+		}
+	}
+	
+	public void registerDirectoryChangeListener(DirectoryChangeListener dcl){
+		this.directoryChangeListeners.add(dcl);
+	}
+
+	public void onDeviceChangeAction(Path path) {
+		/*
+		 * We are changing path to the root of device
+		 */
+		
+		if(!this.directory.getPath().equals(path)){
+			Action a = new ChangeDirectoryAction(this.directory.getPath(), path, this);
+			ActionExecuter aex = ActionService.getInstance().getActionExecuter(this.getDirectory());
+			aex.executeAction(a);
+			
+		}
+		
+	}
+	
+	
+//	public void insertInformationToTable(){
+//		logger.debug("Dodaje informacje do tabelki z widokiem folderu");
+//		
+//		Directory directory = null;
+//		try {
+//			directory = SystemService.getInstance().getDirectory(this.path);
+//		} catch (InvalidDirectoryPathException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (FileNotFoundException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		
+//		this.tableModel.setDirectory(directory);
+//	}
 }

@@ -26,7 +26,7 @@ public class BaseFile implements File{
 		this.attribiute = attribiute;
 		this.path = path;
 		
-		valuesTotable = new Object[]{name,extension,new LocaleDateColumn(lastModifiedDate),new FileSizeColumn(size),new FileAttributeColumn(attribiute)};
+		valuesTotable = new Object[]{name,extension,new FileSizeColumn(size),new LocaleDateColumn(lastModifiedDate)};
 		
 	}
 

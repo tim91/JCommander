@@ -119,7 +119,7 @@ public class SystemService {
 
 	public Directory getDirectory(Path path) throws InvalidDirectoryPathException, FileNotFoundException {
 		
-		String p = path.getPathReadableToJava();
+		String p = path.toString();
 		
 		File f = new File(p);
 		

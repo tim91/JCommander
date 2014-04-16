@@ -15,7 +15,7 @@ public class BaseDirectory extends BaseFile implements Directory {
 			long lastModifiedDate, String attribiute,Path path) {
 		super(name, "", 0, lastModifiedDate, attribiute,path);
 		
-		valuesTotable = new Object[]{name,extension,new LocaleDateColumn(lastModifiedDate),new DirectorySizeColumn(),new DirectoryAttributeColumn(attribiute)};
+		valuesTotable = new Object[]{name,extension,new DirectorySizeColumn(),new LocaleDateColumn(lastModifiedDate)};
 		
 	}
 

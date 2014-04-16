@@ -38,7 +38,9 @@ public class DevicesJComboBox extends JComboBox<Device> implements DirectoryChan
 	
 	protected LocaleParametrizedJLabel devicedescriptionLabel = null;
 	
-	protected List<DeviceChangeListener> deviceChangedListener = new ArrayList<DeviceChangeListener>();
+	protected DeviceChangeListener deviceChangedListener = null;
+	
+//	protected List<DeviceChangeListener> deviceChangedListener = new ArrayList<DeviceChangeListener>();
 	
 	protected Path actualVisitingPath = null;
 	
@@ -70,20 +72,20 @@ public class DevicesJComboBox extends JComboBox<Device> implements DirectoryChan
 		this.devicedescriptionLabel = deviceDescription;
 	}
 	
-	
-	
-	
-	public void setTabbedPane(CustomJTabbedPane tabbedPane) {
-		this.tabbedPane = tabbedPane;
-	}
+//	
+//	
+//	
+//	public void setTabbedPane(CustomJTabbedPane tabbedPane) {
+//		this.tabbedPane = tabbedPane;
+//	}
 
-	private class DeviceCellRenderer extends JLabel implements ListCellRenderer 
+	private class DeviceCellRenderer extends JLabel implements ListCellRenderer<Device>
 	{
 
-		public Component getListCellRendererComponent(JList list, Object value,
+		public Component getListCellRendererComponent(JList list, Device value,
 				int index, boolean isSelected, boolean arg4) {
 			
-			Device device = (Device) value;
+			Device device = value;
 			setIcon(device.getIcon());
 			
 			String text = null;
@@ -94,11 +96,6 @@ public class DevicesJComboBox extends JComboBox<Device> implements DirectoryChan
 			}
 			
 			setText(text);
-			
-//			if(comboBox != null){
-//				comboBox.setPreferredSize(new Dimension(text.length()*5, comboBox.getPreferredSize().height));
-//			}
-			
 			
 			if(index > -1 && isSelected){
 				super.setBackground(Color.BLUE);
@@ -191,27 +188,30 @@ public class DevicesJComboBox extends JComboBox<Device> implements DirectoryChan
 		
 	}
 	
-	public void changeDeviceOnList(Path path) {
+	public void onDirectoryChangeAction(Path path) {
 		actualVisitingPath = path;
 		comboBox.setSelectedItem(path.getDevice());
 	}
 	
 	public void registerDeviceChangeListener(DeviceChangeListener deviceChangedListener){
-		this.deviceChangedListener.add(deviceChangedListener);
+//		this.deviceChangedListener.add(deviceChangedListener);
+		this.deviceChangedListener = deviceChangedListener;
 	}
 	
 	public void notifyListeners(Path p){
 		
-		logger.debug("Aktualnie zaznaczona zakladka :" + this.tabbedPane.getSelectedComponent());
+//		logger.debug("Aktualnie zaznaczona zakladka :" + this.tabbedPane.getSelectedComponent());
 		
-		DirectoryViewJTable selected = (DirectoryViewJTable) JCommanderUtils.getSpecifiedComponentInContainer((Container) this.tabbedPane.getSelectedComponent(), "Sdf");
+//		DirectoryViewJTable selected = (DirectoryViewJTable) JCommanderUtils.getSpecifiedComponentInContainer((Container) this.tabbedPane.getSelectedComponent(), "Sdf");
+//		
+//		for (DeviceChangeListener listener : this.deviceChangedListener) {
+//			logger.debug("Listener :" + listener);
+//			if((listener instanceof DirectoryViewJTable && (selected.equals(listener)))
+//					||!(listener instanceof DirectoryViewJTable) ){
+//				listener.onDeviceChangeAction(p);
+//			}
+//		}
 		
-		for (DeviceChangeListener listener : this.deviceChangedListener) {
-			logger.debug("Listener :" + listener);
-			if((listener instanceof DirectoryViewJTable && (selected.equals(listener)))
-					||!(listener instanceof DirectoryViewJTable) ){
-				listener.changeElementsInTabPanel(p);
-			}
-		}
+		this.deviceChangedListener.onDeviceChangeAction(p);
 	}
 }

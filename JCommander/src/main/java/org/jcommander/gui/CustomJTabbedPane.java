@@ -10,11 +10,13 @@ import javax.swing.event.ChangeListener;
 
 import org.apache.log4j.Logger;
 import org.jcommander.core.DeviceChangeListener;
+import org.jcommander.core.DirectoryChangeListener;
 import org.jcommander.core.util.JCommanderUtils;
 import org.jcommander.model.Device;
+import org.jcommander.model.DirectoryTableModel;
 import org.jcommander.model.Path;
 
-public class CustomJTabbedPane extends JTabbedPane implements DeviceChangeListener {
+public class CustomJTabbedPane extends JTabbedPane implements DeviceChangeListener, DirectoryChangeListener {
 
 	static Logger logger = Logger.getLogger("org.jcommander.gui.CustomJTabbedPane");
 	
@@ -50,9 +52,8 @@ public class CustomJTabbedPane extends JTabbedPane implements DeviceChangeListen
 				logger.debug("Znalazlem komponent : " + comp);
 				
 				DirectoryViewJTable dwt = (DirectoryViewJTable)comp;
-				
-				dwt.setDeviceInComboBox();
-				
+				DirectoryTableModel dtm = (DirectoryTableModel) dwt.getModel();
+				dtm.notifyAllDirectoryChangedListsners();
 				
 			}
 			
@@ -63,10 +64,13 @@ public class CustomJTabbedPane extends JTabbedPane implements DeviceChangeListen
 		}
 		
 	}
+	
+	public void onDeviceChangeAction(Path path) {
+		int selected = this.getSelectedIndex();
+		this.setTitleAt(selected, path.getLeaf());
+	}
 
-	
-	
-	public void changeElementsInTabPanel(Path path) {
+	public void onDirectoryChangeAction(Path path) {
 		int selected = this.getSelectedIndex();
 		this.setTitleAt(selected, path.getLeaf());
 	}

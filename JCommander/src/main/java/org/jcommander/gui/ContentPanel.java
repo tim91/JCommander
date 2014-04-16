@@ -1,6 +1,7 @@
 package org.jcommander.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
@@ -16,13 +17,16 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import org.jcommander.core.initializer.InitializerService;
 import org.jcommander.core.initializer.JCommanderInitializer;
+import org.jcommander.core.util.ColorUtils;
 import org.jcommander.gui.locale.components.LocaleParametrizedJLabel;
 import org.jcommander.model.BaseDevice;
 import org.jcommander.model.Device;
+import org.jcommander.model.DirectoryTableModel;
 import org.jcommander.model.Path;
 
 public class ContentPanel extends JPanel {
@@ -100,24 +104,30 @@ public class ContentPanel extends JPanel {
         }
         CustomJTabbedPane tabPanel = new CustomJTabbedPane();
         
-        devicesComboBox.setTabbedPane(tabPanel);
+//        devicesComboBox.setTabbedPane(tabPanel);
         
         for (Path path : paths) {
         	JPanel center = new JPanel(new BorderLayout());
-        	JButton header = new JButton("header");
+        	JTextField directoryPathTextField = new CustomJTextField();
+        	directoryPathTextField.setBackground(ColorUtils.ACTUAL_DIRECTORY_PATH);
+        	directoryPathTextField.setEditable(false);
+        	
         	LocaleParametrizedJLabel directoryInformation = new LocaleParametrizedJLabel("label.paramterized.directoryInformation");
-        	DirectoryViewJTable djt = new DirectoryViewJTable(path,directoryInformation);
+        	
+        	DirectoryTableModel model = new DirectoryTableModel(path,directoryPathTextField);
+        	DirectoryViewJTable djt = new DirectoryViewJTable(model);
     		
     		center.add(directoryInformation,BorderLayout.SOUTH);
     		center.add(new JScrollPane(djt),BorderLayout.CENTER);
-    		center.add(header,BorderLayout.NORTH);
+    		center.add(directoryPathTextField,BorderLayout.NORTH);
     		
     		
     		/**
              * Register each other before we add tab
              */
-            djt.registerDirectoryChangeListener(devicesComboBox);
-    		devicesComboBox.registerDeviceChangeListener(djt);
+    		model.registerDirectoryChangeListener(devicesComboBox);
+    		model.registerDirectoryChangeListener(tabPanel);
+    		devicesComboBox.registerDeviceChangeListener(model);
     		
             tabPanel.addTab(path.getLeaf(), center);
             
