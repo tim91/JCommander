@@ -20,17 +20,17 @@ import org.apache.log4j.Logger;
 import org.jcommander.core.DirectoryChangeListener;
 import org.jcommander.core.DeviceChangeListener;
 import org.jcommander.core.system.SystemService;
+import org.jcommander.core.util.ColorUtils;
 import org.jcommander.core.util.JCommanderUtils;
 import org.jcommander.gui.locale.components.LocaleParametrizedJLabel;
 import org.jcommander.model.Device;
+import org.jcommander.model.DeviceComboBoxModel;
 import org.jcommander.model.Path;
 import org.jcommander.model.PrototypeDevice;
 
 public class DevicesJComboBox extends JComboBox<Device> implements DirectoryChangeListener {
 
 	static Logger logger = Logger.getLogger("org.jcommander.gui.DevicesJComboBox");
-	
-	protected SystemService system = null;
 	
 	protected JComboBox<Device> comboBox = null;
 	
@@ -45,17 +45,13 @@ public class DevicesJComboBox extends JComboBox<Device> implements DirectoryChan
 	protected Path actualVisitingPath = null;
 	
 	public DevicesJComboBox(LocaleParametrizedJLabel deviceDescription) {
-		super();
+//		super();
 		
-		system = SystemService.getInstance();
+		
 		
 		this.setRenderer(new DeviceCellRenderer());
 		
-		List<Device> devices = system.getDevices();
-		
-		for (Device device : devices) {
-			this.addItem(device);
-		}
+		this.setModel(new DeviceComboBoxModel());
 		/*
 		 * Klasa DirectoryJTable ma za zadanie wybranie odpowiedniego dysku w zaleznosci od wyswietlaego folderu
 		 */
@@ -85,25 +81,33 @@ public class DevicesJComboBox extends JComboBox<Device> implements DirectoryChan
 		public Component getListCellRendererComponent(JList list, Device value,
 				int index, boolean isSelected, boolean arg4) {
 			
-			Device device = value;
-			setIcon(device.getIcon());
 			
-			String text = null;
-			if(index > -1){
-				text = device.toString() + "   | " + device.getDeviceName().toUpperCase();
+			if(value != null){
+				Device device = value;
+				setIcon(device.getIcon());
+				
+				String text = null;
+				if(index > -1){
+					text = device.toString() + "   | " + device.getDeviceName().toUpperCase();
+				}else{
+					text = device.toString();
+				}
+				
+				setText(text);
+				
+				if(index > -1 && isSelected){
+					super.setBackground(ColorUtils.DEVICE_LIST_SELECTION);
+					setOpaque(true);
+				}else{
+					setBackground(Color.WHITE);
+					setOpaque(false);
+				}
+				
 			}else{
-				text = device.toString();
+				System.out.println();
 			}
 			
-			setText(text);
 			
-			if(index > -1 && isSelected){
-				super.setBackground(Color.BLUE);
-				setOpaque(true);
-			}else{
-				setBackground(Color.WHITE);
-				setOpaque(false);
-			}
 			
 //			logger.debug(device.toString() + " zaznaczone : " +  isSelected + " index: " + index);
 			
@@ -130,13 +134,8 @@ public class DevicesJComboBox extends JComboBox<Device> implements DirectoryChan
 			 */
 			int selected = comboBox.getSelectedIndex();
 			
-			List<Device> devices = system.getDevices();
-			
-			comboBox.removeAllItems();
-			
-			for (Device device : devices) {
-				comboBox.addItem(device);
-			}
+			DeviceComboBoxModel model = (DeviceComboBoxModel) comboBox.getModel();
+			model.update();
 			
 			if(comboBox.getItemCount() > selected){
 				/*
@@ -211,7 +210,9 @@ public class DevicesJComboBox extends JComboBox<Device> implements DirectoryChan
 //				listener.onDeviceChangeAction(p);
 //			}
 //		}
+		if(this.deviceChangedListener != null){
+			this.deviceChangedListener.onDeviceChangeAction(p);
+		}
 		
-		this.deviceChangedListener.onDeviceChangeAction(p);
 	}
 }

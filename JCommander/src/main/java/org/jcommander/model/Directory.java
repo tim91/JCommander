@@ -5,7 +5,7 @@ import java.util.List;
 public interface Directory extends File {
 	
 	public int getDirectoriesNum();
-	public int getFilesNum();
+	public int getElements();
 	public List<File> getFiles();
 	public void addFile(File f);
 	public File getFile(int idx);

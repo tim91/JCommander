@@ -11,12 +11,13 @@ public class BasePath implements Path {
 	
 	private Device device = null;
 	
-	public BasePath(String path){
-		this.path = path;
-		
-		//TODO nie wiem czy bd mi to potrzebne
-		this.device = null;
-	}
+//	public BasePath(String path){
+//		this.path = path;
+//		
+//		this.device = getDeviceFromPath(this.path);
+//	}
+//	
+
 	
 	public BasePath(String path,Device device) {
 		this.path = path.replaceAll("/","\\\\");
@@ -102,7 +103,7 @@ public class BasePath implements Path {
 
 	public String getInTotalCommanderStyle() {
 		// TODO Auto-generated method stub
-		return this.path + "*.*";
+		return this.path.toLowerCase() + "\\*.*";
 	}
 	
 }

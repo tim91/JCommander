@@ -7,8 +7,13 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.JTextField;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.TableColumnModelEvent;
+import javax.swing.event.TableColumnModelListener;
 import javax.swing.table.AbstractTableModel;
 
+import org.apache.log4j.Logger;
 import org.jcommander.core.DeviceChangeListener;
 import org.jcommander.core.DirectoryChangeListener;
 import org.jcommander.core.action.Action;
@@ -24,6 +29,9 @@ import org.jcommander.model.column.SizeColumn;
 import org.jcommander.util.exception.InvalidDirectoryPathException;
 
 public class DirectoryTableModel extends AbstractTableModel implements LocaleChangeListener,DeviceChangeListener {
+	
+	static Logger logger = Logger
+			.getLogger("org.jcommander.model.DirectoryTableModel");
 	
 	public static String [] COLUMNS = new String [] {"table.column.name","table.column.extension","table.column.size",
 		"table.column.date"};
@@ -80,6 +88,8 @@ public class DirectoryTableModel extends AbstractTableModel implements LocaleCha
 	}
     
     
+	
+	
     public Directory getDirectory() {
 		return directory;
 	}
@@ -88,6 +98,7 @@ public class DirectoryTableModel extends AbstractTableModel implements LocaleCha
     	Path p = this.directory.getPath();
     	
     	this.directoryPathTextBox.setText(p.getInTotalCommanderStyle());
+    	
     	
     	super.fireTableDataChanged();
     }
@@ -101,7 +112,7 @@ public class DirectoryTableModel extends AbstractTableModel implements LocaleCha
 		 * UPDATE
 		 */
 		fireTableDataChanged();
-		
+		fireTableStructureChanged();
 	}
 
 	@Override
@@ -121,7 +132,7 @@ public class DirectoryTableModel extends AbstractTableModel implements LocaleCha
 	
 	public int getRowCount() {
 		// TODO Auto-generated method stub
-		return this.directory.getFilesNum();
+		return this.directory.getElements();
 	}
 
 	public Object getValueAt(int arg0, int arg1) {
@@ -132,6 +143,7 @@ public class DirectoryTableModel extends AbstractTableModel implements LocaleCha
 	
     @Override
     public String getColumnName(int column) {
+    	logger.debug("Pobieram kolumne : " + column);
     	return LocaleContext.getContext().getBundle().getString(COLUMNS[column]);
     }
     
@@ -148,6 +160,7 @@ public class DirectoryTableModel extends AbstractTableModel implements LocaleCha
 //			this.getColumnModel().getColumn(i).setHeaderValue(val);
 //		}
 		fireTableDataChanged();
+		
 	}
     
 	
@@ -192,4 +205,35 @@ public class DirectoryTableModel extends AbstractTableModel implements LocaleCha
 //		
 //		this.tableModel.setDirectory(directory);
 //	}
+	
+	
+	private class DirectoryTableColumnModelListener implements TableColumnModelListener
+	{
+
+		public void columnAdded(TableColumnModelEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void columnMarginChanged(ChangeEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void columnMoved(TableColumnModelEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void columnRemoved(TableColumnModelEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void columnSelectionChanged(ListSelectionEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
 }

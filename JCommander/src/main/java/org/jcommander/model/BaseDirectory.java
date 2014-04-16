@@ -25,7 +25,7 @@ public class BaseDirectory extends BaseFile implements Directory {
 		return 0;
 	}
 
-	public int getFilesNum() {
+	public int getElements() {
 		// TODO Auto-generated method stub
 		return this.files.size();
 	}

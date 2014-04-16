@@ -127,15 +127,13 @@ public class ContentPanel extends JPanel {
              */
     		model.registerDirectoryChangeListener(devicesComboBox);
     		model.registerDirectoryChangeListener(tabPanel);
-    		devicesComboBox.registerDeviceChangeListener(model);
+//    		devicesComboBox.registerDeviceChangeListener(model);
     		
             tabPanel.addTab(path.getLeaf(), center);
             
             
             
 		}
-        
-        
         
         devicesComboBox.registerDeviceChangeListener(tabPanel);
         

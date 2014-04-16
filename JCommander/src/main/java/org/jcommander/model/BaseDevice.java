@@ -99,7 +99,7 @@ public class BaseDevice implements Device {
 
 	public Path getPath() {
 		// TODO Auto-generated method stub
-		String p = this.getDeviceLabel() + ":\\*.*";
+		String p = this.getDeviceLabel() + ":";
 		return new BasePath(p, this);
 	}
 }

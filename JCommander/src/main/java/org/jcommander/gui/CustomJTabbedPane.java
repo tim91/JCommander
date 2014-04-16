@@ -1,6 +1,7 @@
 package org.jcommander.gui;
 
 import java.awt.Component;
+import java.awt.Container;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -67,6 +68,14 @@ public class CustomJTabbedPane extends JTabbedPane implements DeviceChangeListen
 	
 	public void onDeviceChangeAction(Path path) {
 		int selected = this.getSelectedIndex();
+		
+		/*
+		 * 
+		 */
+		DirectoryViewJTable selectedPanel = (DirectoryViewJTable) JCommanderUtils.getSpecifiedComponentInContainer((Container) this.getSelectedComponent(), "Sdf");
+		DirectoryTableModel dtm = (DirectoryTableModel) selectedPanel.getModel();
+		dtm.onDeviceChangeAction(path);
+		
 		this.setTitleAt(selected, path.getLeaf());
 	}
 

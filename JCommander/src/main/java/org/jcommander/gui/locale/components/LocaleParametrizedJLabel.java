@@ -14,15 +14,15 @@ public class LocaleParametrizedJLabel extends JLabel implements
 	
 	public LocaleParametrizedJLabel(String key) {
 		super();
-		this.values = values;
 		this.key = key;
+		
+		LocaleContext.getContext().addContextChangeListener(this);
 	}
 
 	public void localeChanged() {
 		String pattern = LocaleContext.getContext().getBundle().getString(key);
 		String labelValue = String.format(LocaleContext.getContext().getLocale(),pattern,this.values);
 		this.setText(labelValue);
-
 	}
 
 	public void setValues(Object[] values) {
