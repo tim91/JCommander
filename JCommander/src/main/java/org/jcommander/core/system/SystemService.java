@@ -141,7 +141,8 @@ public class SystemService {
 			org.jcommander.model.File ff = null;
 			
 			String name = file.getName();
-			if(name.contains(".")){
+			if(name.contains(".") && 
+					name.lastIndexOf(".") > 0){ // check if '.' is not first sign in file name
 				name = name.substring(0, name.lastIndexOf("."));
 			}
 			

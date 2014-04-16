@@ -164,7 +164,7 @@ public class JCommander {
 		
 		frame.setIconImage(Toolkit.getDefaultToolkit().getImage("src/main/resources/icons/totalCommander.png"));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(600, 400);
+		frame.setSize(950, 650);
 		frame.setVisible(true);
 	}
 

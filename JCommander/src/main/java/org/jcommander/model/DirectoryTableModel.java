@@ -181,9 +181,8 @@ public class DirectoryTableModel extends AbstractTableModel implements LocaleCha
 		
 		if(!this.directory.getPath().equals(path)){
 			Action a = new ChangeDirectoryAction(this.directory.getPath(), path, this);
-			ActionExecuter aex = ActionService.getInstance().getActionExecuter(this.getDirectory());
+			ActionExecuter aex = ActionService.getInstance().getActionExecuter();
 			aex.executeAction(a);
-			
 		}
 		
 	}

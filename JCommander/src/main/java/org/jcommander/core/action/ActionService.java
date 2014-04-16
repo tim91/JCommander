@@ -1,6 +1,5 @@
 package org.jcommander.core.action;
 
-import org.jcommander.model.BaseFile;
 import org.jcommander.model.File;
 
 public class ActionService {
@@ -24,7 +23,7 @@ public class ActionService {
 	}
 	
 	
-	public ActionExecuter getActionExecuter(File file){
+	public ActionExecuter getActionExecuter(){
 		/*
 		 * Tutaj bd mogl wybrac jakis inny
 		 */

@@ -16,6 +16,7 @@ import org.jcommander.core.action.Action;
 import org.jcommander.core.action.ActionExecuter;
 import org.jcommander.core.action.ActionService;
 import org.jcommander.core.action.ChangeDirectoryAction;
+import org.jcommander.core.action.OpenFileAction;
 import org.jcommander.core.system.SystemService;
 import org.jcommander.gui.locale.LocaleChangeListener;
 import org.jcommander.gui.locale.LocaleContext;
@@ -66,6 +67,8 @@ public class DirectoryViewJTable extends JTable{
 	private class TableMouseClickListener implements MouseListener
 	{
 
+		ActionService actionService = ActionService.getInstance();
+		
 		public void mouseClicked(MouseEvent e) {
 			
 			if(e.getClickCount() == 2){
@@ -76,13 +79,23 @@ public class DirectoryViewJTable extends JTable{
 				
 				File fileSelected = dtm.getRowComponent(row);
 				
-				ActionExecuter ae = ActionService.getInstance().getActionExecuter(fileSelected);
+				logger.debug("Podwojnie klknalem : " + fileSelected.getPath());
 				
-				Action action = new ChangeDirectoryAction(dtm.getDirectory().getPath(), dtm.getRowComponent(row).getPath(), dtm);
+				ActionExecuter ae = actionService.getActionExecuter();
+				
+				Action action = null;
+				
+				if(fileSelected instanceof Directory){
+					action = new ChangeDirectoryAction(dtm.getDirectory().getPath(), fileSelected.getPath(), dtm);
+				}
+				else{
+					action = new OpenFileAction(fileSelected.getPath());
+				}
+				
 				
 				ae.executeAction(action);
 				
-				logger.debug(dtm.getRowComponent(row));
+//				logger.debug(dtm.getRowComponent(row));
 //				logger.debug(message);
 			}
 			
