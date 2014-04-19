@@ -102,6 +102,14 @@ public class DirectoryTableModel extends AbstractTableModel implements LocaleCha
     	super.fireTableDataChanged();
     }
     
+    /*
+     * Check if we can go to the parent of current dir
+     */
+    public boolean isPosibleGoToTheParent(){
+    	
+    	return this.directory.getFile(0) instanceof ParentDirectory;
+    }
+    
 	public void setDirectory(Directory directory) {
 		//TODO teraz powinien byc refresh
 		this.directory = directory;
