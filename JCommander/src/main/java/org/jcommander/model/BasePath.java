@@ -11,12 +11,21 @@ public class BasePath implements Path {
 	
 	private Device device = null;
 
+	/**
+	 * Path always has '\' at the end
+	 * @param path
+	 * @param device
+	 */
 	public BasePath(String path,Device device) {
 		this.path = path.replaceAll("/","\\\\");
 		if(path.endsWith("*.*")){
 			int idx = this.path.lastIndexOf("\\");
 			
 			this.path = this.path.substring(0, idx+1);
+		}
+		
+		if(!this.path.endsWith("\\")){
+			this.path += "\\";
 		}
 		
 		this.device = device;
@@ -97,18 +106,22 @@ public class BasePath implements Path {
 		// TODO Auto-generated method stub
 		logger.debug("Zwracam path dla total commandera, prze transformacja : " + this.path);
 		
-		return this.path.toLowerCase() + "\\*.*";
+		return this.path.toLowerCase() + "*.*";
 	}
 
 	public boolean isRoot() {
 		// TODO Auto-generated method stub
-		boolean contain = !this.path.contains("\\");
-		return contain;
+		String [] pp = this.path.split("\\\\");
+		if(pp.length <= 1){
+			return true;
+		}
+		return false;
 	}
 
 	public Path getParentPath() {
 		// TODO Auto-generated method stub
-		String toRet = this.path.substring(0,this.path.lastIndexOf("\\"));
+		String r = this.path.substring(0,this.path.lastIndexOf("\\"));
+		String toRet = r.substring(0,r.lastIndexOf("\\"));
 		return new BasePath(toRet, this.device);
 	}
 	
