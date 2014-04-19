@@ -8,6 +8,7 @@ public interface Directory extends File {
 	public int getElements();
 	public List<File> getFiles();
 	public void addFile(File f);
+	public void addFile(File f,int idx);
 	public File getFile(int idx);
 
 }

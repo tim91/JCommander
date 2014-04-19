@@ -10,15 +10,7 @@ public class BasePath implements Path {
 	private String path = null;
 	
 	private Device device = null;
-	
-//	public BasePath(String path){
-//		this.path = path;
-//		
-//		this.device = getDeviceFromPath(this.path);
-//	}
-//	
 
-	
 	public BasePath(String path,Device device) {
 		this.path = path.replaceAll("/","\\\\");
 		if(path.endsWith("*.*")){
@@ -103,7 +95,21 @@ public class BasePath implements Path {
 
 	public String getInTotalCommanderStyle() {
 		// TODO Auto-generated method stub
+		logger.debug("Zwracam path dla total commandera, prze transformacja : " + this.path);
+		
 		return this.path.toLowerCase() + "\\*.*";
+	}
+
+	public boolean isRoot() {
+		// TODO Auto-generated method stub
+		boolean contain = !this.path.contains("\\");
+		return contain;
+	}
+
+	public Path getParentPath() {
+		// TODO Auto-generated method stub
+		String toRet = this.path.substring(0,this.path.lastIndexOf("\\"));
+		return new BasePath(toRet, this.device);
 	}
 	
 }

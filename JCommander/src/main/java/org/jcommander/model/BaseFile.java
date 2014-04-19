@@ -1,5 +1,10 @@
 package org.jcommander.model;
 
+import java.awt.Image;
+
+import javax.swing.Icon;
+
+import org.jcommander.model.column.BaseIconAndStringColumn;
 import org.jcommander.model.column.FileAttributeColumn;
 import org.jcommander.model.column.FileSizeColumn;
 import org.jcommander.model.column.LocaleDateColumn;
@@ -13,11 +18,12 @@ public class BaseFile implements File{
 	protected long lastModifiedDate;
 	protected String attribiute;
 	protected Path path;
+	protected Icon icon;
 
 	protected Object[] valuesTotable = null;
 	
 	public BaseFile(String name, String extension, long size,
-			long lastModifiedDate, String attribiute, Path path) {
+			long lastModifiedDate, String attribiute, Path path,Icon icon) {
 		super();
 		this.name = name;
 		this.extension = extension;
@@ -25,8 +31,9 @@ public class BaseFile implements File{
 		this.lastModifiedDate = lastModifiedDate;
 		this.attribiute = attribiute;
 		this.path = path;
+		this.icon = icon;
 		
-		valuesTotable = new Object[]{name,extension,new FileSizeColumn(size),new LocaleDateColumn(lastModifiedDate)};
+		valuesTotable = new Object[]{new BaseIconAndStringColumn(name, icon),extension,new FileSizeColumn(size),new LocaleDateColumn(lastModifiedDate)};
 		
 	}
 
@@ -57,4 +64,10 @@ public class BaseFile implements File{
 		return this.path;
 	}
 
+	public Icon getIcon() {
+		// TODO Auto-generated method stub
+		return icon;
+	}
+
+	
 }

@@ -25,6 +25,7 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import org.apache.log4j.Logger;
+import org.jcommander.core.image.ImageService;
 import org.jcommander.gui.locale.LocaleContext;
 import org.jcommander.gui.locale.LocaleUtils;
 import org.jcommander.gui.locale.components.LocaleJMenu;
@@ -162,7 +163,7 @@ public class JCommander {
 		frame.getContentPane().add(instance.createMainPanel());
 		frame.setJMenuBar(instance.createMainMenuBar());
 		
-		frame.setIconImage(Toolkit.getDefaultToolkit().getImage("src/main/resources/icons/totalCommander.png"));
+		frame.setIconImage(ImageService.getInstance().APPLICATION_ICON);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(950, 650);
 		frame.setVisible(true);

@@ -19,6 +19,7 @@ import org.jcommander.model.BaseFile;
 import org.jcommander.model.BasePath;
 import org.jcommander.model.Device;
 import org.jcommander.model.Directory;
+import org.jcommander.model.ParentDirectory;
 import org.jcommander.model.Path;
 import org.jcommander.util.exception.InvalidDirectoryPathException;
 import org.jcommander.util.exception.SingletonException;
@@ -115,8 +116,29 @@ public class SystemService {
 		}
 
 	}
-
-
+	
+	
+	public Directory getParentDirectory(Path path) throws FileNotFoundException, InvalidDirectoryPathException{
+		String p = path.toString();
+		
+		File f = new File(p);
+		
+		if(!f.exists()){
+			throw new FileNotFoundException();
+		}
+		
+		if(!f.isDirectory()){
+			throw new InvalidDirectoryPathException();
+		}
+		
+		
+		String label = f.getAbsolutePath().split(":")[0];
+		Device device = getDeviceByLabel(label);
+		Directory dir = new ParentDirectory(f.lastModified(), "---",new BasePath(f.getAbsolutePath(),device));
+		return dir;
+	}
+	
+	
 	public Directory getDirectory(Path path) throws InvalidDirectoryPathException, FileNotFoundException {
 		
 		String p = path.toString();
@@ -131,11 +153,13 @@ public class SystemService {
 			throw new InvalidDirectoryPathException();
 		}
 		
-		File [] files = f.listFiles();
+		
 		String label = f.getAbsolutePath().split(":")[0];
 		Device device = getDeviceByLabel(label);
 		Directory dir = new BaseDirectory(f.getName(), f.lastModified(), "---",new BasePath(f.getAbsolutePath(),device));
 		
+		
+		File [] files = f.listFiles();
 		for (File file : files) {
 			
 			org.jcommander.model.File ff = null;
@@ -157,7 +181,11 @@ public class SystemService {
 				if(index > 0){
 					ext += file.getName().substring(index);
 				}
-				ff = new BaseFile(name,ext,file.length(),file.lastModified(),"---",new BasePath(file.getAbsolutePath(),device));
+				
+				logger.debug(this.fileSystemView.getSystemIcon(file).getIconHeight());
+				
+				ff = new BaseFile(name,ext,file.length(),file.lastModified(),"---",new BasePath(file.getAbsolutePath(),device),
+						this.fileSystemView.getSystemIcon(file));
 			}
 			
 			if(ff != null){

@@ -1,17 +1,20 @@
 package org.jcommander.model;
 
+import java.awt.Component;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.TableColumnModelEvent;
 import javax.swing.event.TableColumnModelListener;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
 
 import org.apache.log4j.Logger;
 import org.jcommander.core.DeviceChangeListener;
@@ -64,10 +67,6 @@ public class DirectoryTableModel extends AbstractTableModel implements LocaleCha
     	colIndexToClass.put(3, LocaleDateColumn.class);
     	colIndexToClass.put(4, AttributeColumn.class);
     }
-    
-//    public DirectoryTableModel() {
-//		// TODO Auto-generated constructor stub
-//	}
 	
 	public DirectoryTableModel(Path path,JTextField directoryPathTextBox) {
 		
@@ -107,12 +106,29 @@ public class DirectoryTableModel extends AbstractTableModel implements LocaleCha
 		//TODO teraz powinien byc refresh
 		this.directory = directory;
 		
-		
+		if(!this.directory.getPath().isRoot()){
+			/*
+			 * Insert line on the top
+			 */
+			Path pp = this.directory.getPath();
+			Directory d = null;
+			try {
+				d = SystemService.getInstance().getParentDirectory(pp.getParentPath());
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvalidDirectoryPathException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			this.directory.addFile(d,0);
+			
+		}
 		/*
 		 * UPDATE
 		 */
 		fireTableDataChanged();
-		fireTableStructureChanged();
+//		fireTableStructureChanged();
 	}
 
 	@Override
@@ -151,7 +167,7 @@ public class DirectoryTableModel extends AbstractTableModel implements LocaleCha
     public boolean isCellEditable(int rowIndex, int columnIndex) {
     	return COLUMNS_EDITABLE.get(columnIndex);
     }
-
+    
 	public void localeChanged() {
 		
 //		int cols = this.getColumnCount();
@@ -160,7 +176,6 @@ public class DirectoryTableModel extends AbstractTableModel implements LocaleCha
 //			this.getColumnModel().getColumn(i).setHeaderValue(val);
 //		}
 		fireTableDataChanged();
-		
 	}
     
 	
@@ -205,7 +220,6 @@ public class DirectoryTableModel extends AbstractTableModel implements LocaleCha
 //		this.tableModel.setDirectory(directory);
 //	}
 	
-	
 	private class DirectoryTableColumnModelListener implements TableColumnModelListener
 	{
 
@@ -235,4 +249,5 @@ public class DirectoryTableModel extends AbstractTableModel implements LocaleCha
 		}
 		
 	}
+	
 }

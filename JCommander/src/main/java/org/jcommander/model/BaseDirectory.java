@@ -3,19 +3,22 @@ package org.jcommander.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jcommander.model.column.DirectoryAttributeColumn;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+
+import org.jcommander.core.image.ImageService;
+import org.jcommander.model.column.BaseIconAndStringColumn;
 import org.jcommander.model.column.DirectorySizeColumn;
-import org.jcommander.model.column.FileAttributeColumn;
-import org.jcommander.model.column.FileSizeColumn;
 import org.jcommander.model.column.LocaleDateColumn;
 
 public class BaseDirectory extends BaseFile implements Directory {
 	
 	public BaseDirectory(String name,
 			long lastModifiedDate, String attribiute,Path path) {
-		super(name, "", 0, lastModifiedDate, attribiute,path);
+		super(name, "", 0, lastModifiedDate, attribiute,path,
+				new ImageIcon(ImageService.getInstance().DIRECTORY_ICON));
 		
-		valuesTotable = new Object[]{name,extension,new DirectorySizeColumn(),new LocaleDateColumn(lastModifiedDate)};
+		valuesTotable = new Object[]{new BaseIconAndStringColumn(name, icon),extension,new DirectorySizeColumn(),new LocaleDateColumn(lastModifiedDate)};
 		
 	}
 
@@ -37,6 +40,11 @@ public class BaseDirectory extends BaseFile implements Directory {
 
 	public void addFile(File f) {
 		this.files.add(f);
+		
+	}
+	
+	public void addFile(File f,int idx) {
+		this.files.add(idx,f);
 		
 	}
 
