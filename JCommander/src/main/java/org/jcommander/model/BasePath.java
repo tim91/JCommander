@@ -31,16 +31,8 @@ public class BasePath implements Path {
 		this.device = device;
 	}
 	
-	public String getLeaf() {
-		String[] el = this.path.split("\\\\");
-		
-		int toRet = el.length - 1;
-		
-		if(toRet < 0){
-			return null;
-		}
-		
-		return el[toRet].toLowerCase();
+	public String getLeafInLowerCase() {
+		return getLeaf().toLowerCase();
 	}
 
 	public String getFullPath() {
@@ -123,6 +115,19 @@ public class BasePath implements Path {
 		String r = this.path.substring(0,this.path.lastIndexOf("\\"));
 		String toRet = r.substring(0,r.lastIndexOf("\\"));
 		return new BasePath(toRet, this.device);
+	}
+
+	public String getLeaf() {
+		// TODO Auto-generated method stub
+		String[] el = this.path.split("\\\\");
+		
+		int toRet = el.length - 1;
+		
+		if(toRet < 0){
+			return null;
+		}
+		
+		return el[toRet];
 	}
 	
 }

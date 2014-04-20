@@ -5,6 +5,7 @@ import java.util.List;
 import javax.swing.ImageIcon;
 
 import org.jcommander.core.image.ImageService;
+import org.jcommander.model.column.BaseExtensionColumn;
 import org.jcommander.model.column.BaseIconAndStringColumn;
 import org.jcommander.model.column.DirectorySizeColumn;
 import org.jcommander.model.column.LocaleDateColumn;
@@ -15,7 +16,24 @@ public class ParentDirectory extends BaseFile implements Directory {
 		super("..", "", 0, lastModifiedDate, attribiute, path, 
 				new ImageIcon(ImageService.getInstance().PARENT_DIRECTORY_ICON));
 		
-		valuesTotable = new Object[]{new BaseIconAndStringColumn(name, icon),extension,new DirectorySizeColumn(),new LocaleDateColumn(lastModifiedDate)};
+boolean aa = true;
+		
+		BaseIconAndStringColumn n = new BaseIconAndStringColumn(name, icon);
+		n.setIsRowDirectory(aa);
+		
+		BaseExtensionColumn ext = new BaseExtensionColumn(extension);
+		ext.setIsRowDirectory(aa);
+		
+		DirectorySizeColumn dsc = new DirectorySizeColumn();
+		dsc.setIsRowDirectory(aa);
+		
+		LocaleDateColumn ldc = new LocaleDateColumn(lastModifiedDate);
+		ldc.setIsRowDirectory(aa);
+		
+		valuesTotable = new Object[]{n,
+				ext,
+				dsc,
+				ldc};
 	}
 
 	/*
@@ -52,5 +70,9 @@ public class ParentDirectory extends BaseFile implements Directory {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
+	public boolean isDirectory() {
+		return true;
+	}
 
 }

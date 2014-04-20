@@ -1,8 +1,11 @@
 package org.jcommander.gui;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -15,7 +18,9 @@ import javax.swing.JComponent;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableRowSorter;
 
 import org.apache.log4j.Logger;
 import org.jcommander.core.action.Action;
@@ -23,10 +28,17 @@ import org.jcommander.core.action.ActionExecuter;
 import org.jcommander.core.action.ActionService;
 import org.jcommander.core.action.ChangeDirectoryAction;
 import org.jcommander.core.action.OpenFileAction;
+import org.jcommander.core.comparator.DirectoryTableRowComparatorService;
 import org.jcommander.model.Directory;
+import org.jcommander.model.DirectoryRowSorter;
 import org.jcommander.model.DirectoryTableModel;
 import org.jcommander.model.File;
+import org.jcommander.model.column.BaseExtensionColumn;
+import org.jcommander.model.column.BaseIconAndStringColumn;
+import org.jcommander.model.column.Column;
+import org.jcommander.model.column.FileSizeColumn;
 import org.jcommander.model.column.IconAndStringColumn;
+import org.jcommander.model.column.LocaleDateColumn;
 
 public class DirectoryViewJTable extends JTable {
 
@@ -47,9 +59,30 @@ public class DirectoryViewJTable extends JTable {
 		this.addMouseListener(new TableMouseClickListener());
 		this.addKeyListener(new KeyboardListener());
 		
-		TableColumnModel tcm = this.getColumnModel();
+//		this.setRowSorter(new DirectoryRowSorter(this.tableModel));
 		
-		tcm.getColumn(0).setCellRenderer(new IconTextCellRenderer());
+		TableColumnModel tcm = this.getColumnModel();
+//		tcm.getColumn(0).setCellRenderer(new IconTextCellRenderer());
+		
+		this.setAutoCreateRowSorter(true);
+		TableRowSorter sorter = (TableRowSorter) this.getRowSorter();
+		sorter.setComparator(
+				DirectoryTableRowComparatorService.FILE_NAME_COLUMN_INDEX, 
+				new BaseIconAndStringColumn(null, null));
+		sorter.setComparator(
+				DirectoryTableRowComparatorService.EXTENDSION_NAME_COLUMN_INDEX, 
+				new BaseExtensionColumn(null));
+		sorter.setComparator(
+				DirectoryTableRowComparatorService.SIZE_COLUMN_INDEX, 
+				new FileSizeColumn(0));
+		sorter.setComparator(
+				DirectoryTableRowComparatorService.DATE_COLUMN_INDEX, 
+				new LocaleDateColumn(0));
+		
+		
+		
+//		this.getTableHeader().setDefaultRenderer(new DefaultTableCellRenderer());
+		
 		
 		
 		/*
@@ -67,7 +100,19 @@ public class DirectoryViewJTable extends JTable {
 	        
 	    });
 		
-		
+	    this.addFocusListener(new FocusListener() {
+			
+			public void focusLost(FocusEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			public void focusGained(FocusEvent arg0) {
+				// TODO Auto-generated method stub
+				logger.debug("panel focused : " + arg0.getSource());
+			}
+		});
+	    
 		directoryViewJTable = this;
 	}
 
@@ -182,6 +227,37 @@ public class DirectoryViewJTable extends JTable {
 		}
 		
 	}
+	
+	@Override
+	public Component prepareRenderer(
+	        TableCellRenderer renderer, int row, int column)
+	    {
+	        Component c = super.prepareRenderer(renderer, row, column);
+	        
+	        int row1 = convertRowIndexToView(row);
+	        
+	        DirectoryTableModel dtm = (DirectoryTableModel) getModel();
+	        Object o =  dtm.getValueAt(row1, column);
+	        Column col = (Column) o;
+	        if(column == DirectoryTableRowComparatorService.FILE_NAME_COLUMN_INDEX){
+	        	
+	        	IconAndStringColumn col1 = (IconAndStringColumn) col;
+		        
+		        ImageIcon ii = (ImageIcon) col1.getIcon();
+		        Image img = ii.getImage();  
+		        Image newimg = img.getScaledInstance(16, 16,  java.awt.Image.SCALE_SMOOTH);  
+		        Icon newIcon = new ImageIcon(newimg); 
+		        
+		        ((DefaultTableCellRenderer) c).setIcon(newIcon);
+		        ((DefaultTableCellRenderer) c).setText(col1.getText());
+	        }
+	        else{
+	        	((DefaultTableCellRenderer) c).setIcon(null);
+	        	((DefaultTableCellRenderer) c).setText(col.toString());
+	        }
+	        
+	        return c;
+	    }
 	
 	public class IconTextCellRenderer extends DefaultTableCellRenderer {
 	    public Component getTableCellRendererComponent(JTable table,

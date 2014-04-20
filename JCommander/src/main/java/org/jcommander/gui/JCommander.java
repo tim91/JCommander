@@ -66,7 +66,7 @@ public class JCommander {
 	
 	private JComponent createCenterPanel() {
 		JPanel leftPanel = new ContentPanel(new BorderLayout(),ContentPanel.PanelSide.LEFT);
-        JPanel rightPanel = new ContentPanel(new BorderLayout(),ContentPanel.PanelSide.LEFT);
+        JPanel rightPanel = new ContentPanel(new BorderLayout(),ContentPanel.PanelSide.RIGHT);
         final JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
         		leftPanel, rightPanel);
         splitPane.setOneTouchExpandable(true);

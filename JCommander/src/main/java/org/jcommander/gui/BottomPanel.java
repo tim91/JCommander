@@ -1,12 +1,24 @@
 package org.jcommander.gui;
 
+import java.awt.Component;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import org.apache.commons.lang3.tuple.Pair;
+import org.jcommander.core.ApplicationContext;
+import org.jcommander.core.action.Action;
+import org.jcommander.core.action.ActionService;
+import org.jcommander.core.action.CopyAction;
+import org.jcommander.core.util.JCommanderUtils;
 import org.jcommander.gui.locale.components.LocaleJButtonForBottomPanel;
+import org.jcommander.model.Directory;
+import org.jcommander.model.File;
 
 
 public class BottomPanel extends JPanel {
@@ -31,6 +43,20 @@ public class BottomPanel extends JPanel {
 		JButton viewButton = new LocaleJButtonForBottomPanel("button.view");
 		JButton editButton = new LocaleJButtonForBottomPanel("button.edit");
 		JButton copyButton = new LocaleJButtonForBottomPanel("button.copy");
+		copyButton.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent arg0) {
+				Pair<Component, Component> panels = ApplicationContext.getInstance().getSelectedPanels();
+				
+				Pair<List<File>, Directory> fromTo = JCommanderUtils.extractFromAndToLocation(panels);
+				
+				Action copyAction = new CopyAction(fromTo.getLeft(), fromTo.getRight().getPath());
+				
+				ActionService.getInstance().getActionExecuter().executeAction(copyAction);
+				
+			}
+		});
+		
 		JButton moveButton = new LocaleJButtonForBottomPanel("button.move");
 		JButton newFolderButton = new LocaleJButtonForBottomPanel("button.newFolder");
 		JButton deleteButton = new LocaleJButtonForBottomPanel("button.delete");

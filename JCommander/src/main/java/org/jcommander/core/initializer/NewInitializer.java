@@ -15,7 +15,7 @@ public class NewInitializer implements JCommanderInitializer {
 		// TODO Auto-generated method stub
 		List<Path> arr = new ArrayList<Path>();
 		
-		arr.add(new BasePath("c:\\",system.getDeviceByLabel("c")));
+		arr.add(new BasePath("c:\\Users\\Tomek\\test",system.getDeviceByLabel("c")));
 		arr.add(new BasePath("d:\\",system.getDeviceByLabel("d")));
 		return arr;
 	}
@@ -24,8 +24,8 @@ public class NewInitializer implements JCommanderInitializer {
 		// TODO Auto-generated method stub
 		List<Path> arr = new ArrayList<Path>();
 		
-		arr.add(new BasePath("c:\\",system.getDeviceByLabel("c")));
-		arr.add(new BasePath("d:\\",system.getDeviceByLabel("d")));
+		arr.add(new BasePath("d:\\testJco",system.getDeviceByLabel("c")));
+		arr.add(new BasePath("c:\\",system.getDeviceByLabel("d")));
 		return arr;
 	}
 }

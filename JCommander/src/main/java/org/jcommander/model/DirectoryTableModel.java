@@ -1,20 +1,17 @@
 package org.jcommander.model;
 
-import java.awt.Component;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.TableColumnModelEvent;
 import javax.swing.event.TableColumnModelListener;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableCellRenderer;
 
 import org.apache.log4j.Logger;
 import org.jcommander.core.DeviceChangeListener;
@@ -27,6 +24,8 @@ import org.jcommander.core.system.SystemService;
 import org.jcommander.gui.locale.LocaleChangeListener;
 import org.jcommander.gui.locale.LocaleContext;
 import org.jcommander.model.column.AttributeColumn;
+import org.jcommander.model.column.ExtensionColumn;
+import org.jcommander.model.column.IconAndStringColumn;
 import org.jcommander.model.column.LocaleDateColumn;
 import org.jcommander.model.column.SizeColumn;
 import org.jcommander.util.exception.InvalidDirectoryPathException;
@@ -61,8 +60,8 @@ public class DirectoryTableModel extends AbstractTableModel implements LocaleCha
     
     static
     {
-    	colIndexToClass.put(0, String.class);
-    	colIndexToClass.put(1, String.class);
+    	colIndexToClass.put(0, IconAndStringColumn.class);
+    	colIndexToClass.put(1, ExtensionColumn.class);
     	colIndexToClass.put(2, SizeColumn.class);
     	colIndexToClass.put(3, LocaleDateColumn.class);
     	colIndexToClass.put(4, AttributeColumn.class);
@@ -110,6 +109,7 @@ public class DirectoryTableModel extends AbstractTableModel implements LocaleCha
     	return this.directory.getFile(0) instanceof ParentDirectory;
     }
     
+    
 	public void setDirectory(Directory directory) {
 		//TODO teraz powinien byc refresh
 		this.directory = directory;
@@ -150,6 +150,10 @@ public class DirectoryTableModel extends AbstractTableModel implements LocaleCha
 		return COLUMNS.length;
 	}
 
+	public List<File> getFiles(){
+		return this.directory.getFiles();
+	}
+	
 	public File getRowComponent(int rowIdx){
 		return this.directory.getFile(rowIdx);
 	}

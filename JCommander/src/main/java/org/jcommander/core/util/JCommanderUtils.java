@@ -2,11 +2,19 @@ package org.jcommander.core.util;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.KeyboardFocusManager;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JScrollPane;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 import org.jcommander.gui.DirectoryViewJTable;
+import org.jcommander.model.Directory;
+import org.jcommander.model.DirectoryTableModel;
+import org.jcommander.model.File;
 
 
 public class JCommanderUtils {
@@ -55,5 +63,61 @@ public class JCommanderUtils {
 	    }
 	    return null;
 	  }
+	
+	
+	public static Pair<List<File>,Directory> extractFromAndToLocation(Pair<Component,Component> cps){
+		
+		Component c1 = cps.getLeft();
+		Component c2 = cps.getRight();
+		
+		
+		List<File> from = null;
+		Directory to = null;
+		
+		DirectoryViewJTable fromTable = null;
+		DirectoryViewJTable toTable = null;
+		fromTable = (DirectoryViewJTable) getSpecifiedComponentInContainer((Container) c1, "Sdf");
+		toTable = (DirectoryViewJTable) getSpecifiedComponentInContainer((Container) c2, "Sdf");
+//		logger.debug("c1 is focused? " +c1.isFocusOwner() );
+//		logger.debug("c2 is focused? " +c2.isFocusOwner() );
+//		Component cc = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+//		if(c1.isFocusOwner()){
+//			//destination
+//			
+//			
+//		}else{
+//			fromTable = (DirectoryViewJTable) getSpecifiedComponentInContainer((Container) c2, "Sdf");
+//			toTable = (DirectoryViewJTable) getSpecifiedComponentInContainer((Container) c1, "Sdf");
+//		}
+		
+		logger.debug("c1 is focused? " +fromTable.isFocusOwner() );
+		logger.debug("c2 is focused? " +toTable.isFocusOwner() );
+		from = getSelectedRows(fromTable);
+		to = getDirectoryInTable(toTable);
+		
+		return new ImmutablePair<List<File>, Directory>(from, to);
+	}
+	
+	public static List<File> getSelectedRows(DirectoryViewJTable table){
+		DirectoryTableModel dtm = (DirectoryTableModel) table.getModel();
+		List<File> files = new ArrayList<File>();
+		int [] rows = table.getSelectedRows();
+		if(rows.length == 0){
+			table.setRowSelectionInterval(0, 0);
+			rows = new int[1];
+			rows[0] = 0;
+		}
+		
+		for (int i : rows) {
+			Object o = dtm.getRowComponent(i);
+			files.add((File)o);
+		}
+		return files;
+	}
+	
+	public static Directory getDirectoryInTable(DirectoryViewJTable table){
+		DirectoryTableModel dtm = (DirectoryTableModel) table.getModel();
+		return dtm.getDirectory();
+	}
 	
 }

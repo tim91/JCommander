@@ -4,20 +4,20 @@ import java.awt.Component;
 import java.awt.Container;
 
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import org.apache.log4j.Logger;
+import org.jcommander.core.ApplicationContext;
+import org.jcommander.core.ChildFocusedListener;
 import org.jcommander.core.DeviceChangeListener;
 import org.jcommander.core.DirectoryChangeListener;
 import org.jcommander.core.util.JCommanderUtils;
-import org.jcommander.model.Device;
 import org.jcommander.model.DirectoryTableModel;
 import org.jcommander.model.Path;
 
-public class CustomJTabbedPane extends JTabbedPane implements DeviceChangeListener, DirectoryChangeListener {
+public class CustomJTabbedPane extends JTabbedPane implements DeviceChangeListener, DirectoryChangeListener, ChildFocusedListener {
 
 	static Logger logger = Logger.getLogger("org.jcommander.gui.CustomJTabbedPane");
 	
@@ -76,11 +76,17 @@ public class CustomJTabbedPane extends JTabbedPane implements DeviceChangeListen
 		DirectoryTableModel dtm = (DirectoryTableModel) selectedPanel.getModel();
 		dtm.onDeviceChangeAction(path);
 		
-		this.setTitleAt(selected, path.getLeaf());
+		this.setTitleAt(selected, path.getLeafInLowerCase());
 	}
 
 	public void onDirectoryChangeAction(Path path) {
 		int selected = this.getSelectedIndex();
-		this.setTitleAt(selected, path.getLeaf());
+		this.setTitleAt(selected, path.getLeafInLowerCase());
+	}
+
+	public void onChildFocus() {
+		// TODO Auto-generated method stub
+		logger.debug("Powiadomiono mnie " + this + " ze jestem zaznaczony");
+		ApplicationContext.getInstance().onFocusChangeOwner(this.getSelectedComponent());
 	}
 }

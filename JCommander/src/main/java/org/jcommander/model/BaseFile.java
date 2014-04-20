@@ -1,11 +1,10 @@
 package org.jcommander.model;
 
-import java.awt.Image;
-
 import javax.swing.Icon;
 
+import org.jcommander.model.column.BaseExtensionColumn;
 import org.jcommander.model.column.BaseIconAndStringColumn;
-import org.jcommander.model.column.FileAttributeColumn;
+import org.jcommander.model.column.DirectorySizeColumn;
 import org.jcommander.model.column.FileSizeColumn;
 import org.jcommander.model.column.LocaleDateColumn;
 
@@ -33,7 +32,26 @@ public class BaseFile implements File{
 		this.path = path;
 		this.icon = icon;
 		
-		valuesTotable = new Object[]{new BaseIconAndStringColumn(name, icon),extension,new FileSizeColumn(size),new LocaleDateColumn(lastModifiedDate)};
+//		valuesTotable = new Object[]{new BaseIconAndStringColumn(name, icon),extension,new FileSizeColumn(size),new LocaleDateColumn(lastModifiedDate)};
+		
+		
+		BaseIconAndStringColumn n = new BaseIconAndStringColumn(name, icon);
+		n.setIsRowDirectory(isDirectory());
+		
+		BaseExtensionColumn ext = new BaseExtensionColumn(extension);
+		ext.setIsRowDirectory(isDirectory());
+		
+		FileSizeColumn dsc = new FileSizeColumn(size);
+		dsc.setIsRowDirectory(isDirectory());
+		
+		LocaleDateColumn ldc = new LocaleDateColumn(lastModifiedDate);
+		ldc.setIsRowDirectory(isDirectory());
+		
+		valuesTotable = new Object[]{n,
+				ext,
+				dsc,
+				ldc};
+		
 		
 	}
 
@@ -67,6 +85,21 @@ public class BaseFile implements File{
 	public Icon getIcon() {
 		// TODO Auto-generated method stub
 		return icon;
+	}
+
+	public int compareTo(File f2) {
+		
+		if(this instanceof Directory)
+			return 1;
+		else if((this instanceof File) && (f2 instanceof Directory)){
+			return -1;
+		}
+		else
+			return 0;
+	}
+
+	public boolean isDirectory() {
+		return false;
 	}
 
 	

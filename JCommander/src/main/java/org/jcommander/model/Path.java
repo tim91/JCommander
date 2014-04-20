@@ -4,6 +4,7 @@ package org.jcommander.model;
 public interface Path {
 
 	public String getLeaf();
+	public String getLeafInLowerCase();
 	public String getFullPath();
 	public Device getDevice();
 	public boolean isRoot();
