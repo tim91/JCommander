@@ -1,33 +1,43 @@
 package org.jcommander.model;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import javax.swing.RowSorter;
+import javax.swing.table.TableRowSorter;
 
 import org.apache.log4j.Logger;
+import org.jcommander.core.DirectoryContentChangeListener;
+import org.jcommander.core.comparator.AbstractColumnComparator;
 import org.jcommander.core.comparator.DirectoryTableRowComparator;
 import org.jcommander.core.comparator.DirectoryTableRowComparatorService;
 import org.jcommander.model.column.IconAndStringColumn;
 
-public class DirectoryRowSorter extends RowSorter<DirectoryTableModel> {
+public class DirectoryRowSorter extends TableRowSorter<DirectoryTableModel> implements DirectoryContentChangeListener {
 
 	static Logger logger = Logger
 			.getLogger("org.jcommander.model.DirectoryRowSorter");
 	
 	DirectoryTableModel model;
+	
+	private Map<Integer,Boolean> columnToCurrentSortDirection = new HashMap<Integer,Boolean>();
+	
 	public DirectoryRowSorter(DirectoryTableModel model) {
+		super(model);
 		// TODO Auto-generated constructor stub
 		this.model = model;
+		
+		columnToCurrentSortDirection.put(DirectoryTableRowComparatorService.FILE_NAME_COLUMN_INDEX, true);
+		columnToCurrentSortDirection.put(DirectoryTableRowComparatorService.EXTENDSION_NAME_COLUMN_INDEX, true);
+		columnToCurrentSortDirection.put(DirectoryTableRowComparatorService.SIZE_COLUMN_INDEX, true);
+		columnToCurrentSortDirection.put(DirectoryTableRowComparatorService.DATE_COLUMN_INDEX, true);
+		
+		
+		toggleSortOrder(DirectoryTableRowComparatorService.FILE_NAME_COLUMN_INDEX);
 	}
+
 	
-	List<? extends SortKey> keys = null;
-
-    @Override
-    public DirectoryTableModel getModel() {
-        return this.model;
-    }
-
     @Override
     public void toggleSortOrder(int column) {
     	logger.debug("SORT : " + column);
@@ -36,68 +46,34 @@ public class DirectoryRowSorter extends RowSorter<DirectoryTableModel> {
     	 * Get appropriate comparator by column index
     	 */
     	
+    	boolean direction = columnToCurrentSortDirection.get(column);
+    	
+    	if(direction)
+    		direction = false;
+    	else{
+    		direction = true;
+    	}
+    	
     	DirectoryTableRowComparator comparator = DirectoryTableRowComparatorService.getInstance().getComparator(column);
     	
+    	((AbstractColumnComparator)comparator).setDirection(direction);
     	
-        Collections.sort(this.model.getFiles(),comparator);
+    	List<File> files = this.model.getFiles();
+        Collections.sort(files,comparator);
+        this.model.setFiles(files);
         logger.debug("---------------");
-        for(File f : this.model.getFiles()){
+        for(File f : files){
         	IconAndStringColumn i = (IconAndStringColumn) f.getValueByColumnIndex(0);
         	logger.debug(i.getText());
         }
+        
+        
+        columnToCurrentSortDirection.put(column, direction);
     }
 
-    @Override
-    public int convertRowIndexToModel(int index) {
-        return index;
-    }
 
-    @Override
-    public int convertRowIndexToView(int index) {
-        return index;
-    }
+	public void onDirectorycontentChange() {
+		toggleSortOrder(0);
+	}
 
-    @Override
-    public void setSortKeys(List<? extends SortKey> keys) {
-        this.keys = keys;
-    }
-
-    @Override
-    public List<? extends SortKey> getSortKeys() {
-        return keys;
-    }
-
-    @Override
-    public int getViewRowCount() {
-        return getModelRowCount();
-    }
-
-    @Override
-    public int getModelRowCount() {
-        return this.model.getRowCount();
-    }
-
-    @Override
-    public void modelStructureChanged() {
-    }
-
-    @Override
-    public void allRowsChanged() {
-    }
-
-    @Override
-    public void rowsInserted(int firstRow, int endRow) {
-    }
-
-    @Override
-    public void rowsDeleted(int firstRow, int endRow) {
-    }
-
-    @Override
-    public void rowsUpdated(int firstRow, int endRow) {
-    }
-
-    @Override
-    public void rowsUpdated(int firstRow, int endRow, int column) {
-    }
 }

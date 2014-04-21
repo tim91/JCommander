@@ -4,7 +4,7 @@ import java.util.Comparator;
 
 import javax.swing.Icon;
 
-public interface IconAndStringColumn {
+public interface IconAndStringColumn extends Column {
 
 	public String getText();
 	public Icon getIcon();

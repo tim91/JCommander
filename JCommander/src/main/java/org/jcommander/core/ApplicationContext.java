@@ -1,19 +1,29 @@
 package org.jcommander.core;
 
 import java.awt.Component;
+import java.awt.Container;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
+import org.jcommander.core.util.JCommanderUtils;
 import org.jcommander.gui.CustomJTabbedPane;
 import org.jcommander.gui.DirectoryViewJTable;
+import org.jcommander.model.DirectoryTableModel;
 
 public class ApplicationContext implements DirectoryTableFocusOwnerChangeListsner {
 
 	private static ApplicationContext applicationContext;
 	
-	private static Component focuesDirectoryComponent;
+	private static ActionListener onMoveActionListsner = null;
+	
+	private static ActionListener onCopyActionListsner = null;
+	
+	private static ActionListener onDeleteActionListsner = null;
+	
+	private static Component lastFocusedDirectoryComponent;
 	
 	private ApplicationContext() {
 		// TODO Auto-generated constructor stub
@@ -34,7 +44,23 @@ public class ApplicationContext implements DirectoryTableFocusOwnerChangeListsne
 		tabbedPanels.add(tabbed);
 	}
 	
+	/*
+	 * Method refresh panel with contain table with directory view.
+	 * Useful when we are copying files and we want refresh table
+	 */
+	public void refreshTabbedPanels(){
+		for (CustomJTabbedPane c : tabbedPanels) {
+			c.getSelectedComponent();
+			
+			DirectoryViewJTable table = (DirectoryViewJTable) JCommanderUtils.getSpecifiedComponentInContainer((Container)c.getSelectedComponent(), "dsf");
+			refreshTable(table);
+		}
+	}
 	
+	private void refreshTable(DirectoryViewJTable table){
+		DirectoryTableModel model = (DirectoryTableModel) table.getModel();
+		model.refreshDataSource();
+	}
 	
 	public Pair<Component, Component> getSelectedPanels(){
 		
@@ -42,7 +68,7 @@ public class ApplicationContext implements DirectoryTableFocusOwnerChangeListsne
 		Component c2 = tabbedPanels.get(1).getSelectedComponent();
 		Pair<Component, Component> p = null;
 		
-		if(c1 == focuesDirectoryComponent){
+		if(c1 == lastFocusedDirectoryComponent){
 			p = new ImmutablePair<Component, Component>(c1,c2);
 		}
 		else{
@@ -52,10 +78,38 @@ public class ApplicationContext implements DirectoryTableFocusOwnerChangeListsne
 		return p;
 	}
 
-	public void onFocusChangeOwner(Component table) {
-		// TODO Auto-generated method stub
-		focuesDirectoryComponent = table;
+	public Component getLastFocusedDirectoryComponent(){
+		return lastFocusedDirectoryComponent;
 	}
 	
+	public void onFocusChangeOwner(Component table) {
+		// TODO Auto-generated method stub
+		lastFocusedDirectoryComponent = table;
+	}
+
+	public static ActionListener getOnMoveActionListsner() {
+		return onMoveActionListsner;
+	}
+
+	public static void setOnMoveActionListsner(ActionListener onMoveActionListsner) {
+		ApplicationContext.onMoveActionListsner = onMoveActionListsner;
+	}
+
+	public static ActionListener getOnCopyActionListsner() {
+		return onCopyActionListsner;
+	}
+
+	public static void setOnCopyActionListsner(ActionListener onCopyActionListsner) {
+		ApplicationContext.onCopyActionListsner = onCopyActionListsner;
+	}
+
+	public static ActionListener getOnDeleteActionListsner() {
+		return onDeleteActionListsner;
+	}
+
+	public static void setOnDeleteActionListsner(
+			ActionListener onDeleteActionListsner) {
+		ApplicationContext.onDeleteActionListsner = onDeleteActionListsner;
+	}
 	
 }

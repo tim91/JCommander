@@ -60,6 +60,7 @@ public class CustomJTextField extends JTextField {
 					
 					state = State.NOT_EDITABLE;
 					customJTextField.setEditable(false);
+					customJTextField.setFocusable(false);
 					customJTextField.setBackground(ColorUtils.ACTUAL_DIRECTORY_PATH);
 				}
 			}
@@ -79,6 +80,7 @@ public class CustomJTextField extends JTextField {
 				
 				state = State.EDITABLE;
 				customJTextField.setEditable(true);
+				customJTextField.setFocusable(true);
 				customJTextField.setBackground(Color.white);
 				customJTextField.setCaret(new DefaultCaret());
 				customJTextField.setCaretColor(Color.BLACK);

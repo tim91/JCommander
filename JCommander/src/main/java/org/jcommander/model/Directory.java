@@ -10,5 +10,6 @@ public interface Directory extends File {
 	public void addFile(File f);
 	public void addFile(File f,int idx);
 	public File getFile(int idx);
+	public void setFiles(List<File> fs);
 
 }

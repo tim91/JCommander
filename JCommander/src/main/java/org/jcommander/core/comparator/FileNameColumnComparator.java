@@ -11,6 +11,7 @@ public class FileNameColumnComparator extends AbstractColumnComparator implement
 		super(idx);
 	}
 	
+	
 	public int compare(File o1, File o2) {
 		
 		IconAndStringColumn col1 = (IconAndStringColumn) o1.getValueByColumnIndex(idx);
@@ -20,16 +21,19 @@ public class FileNameColumnComparator extends AbstractColumnComparator implement
 			return 0;
 		}
 		else if(o1.isDirectory() && !(o2.isDirectory())){
-			return 1;
+			return -1;
 		}
 		else if(o2.isDirectory() && !(o1.isDirectory())){
-			return -1;
+			return 1;
 		}
 		else{
 			String v1 = col1.getText();
 			String v2 = col2.getText();
-			return v1.compareTo(v2);
-			
+			if(direction){
+				return v2.compareTo(v1);
+			}else{
+				return v1.compareTo(v2);
+			}
 		}
 	}
 

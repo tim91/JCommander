@@ -15,29 +15,12 @@ import org.jcommander.model.column.LocaleDateColumn;
 public class BaseDirectory extends BaseFile implements Directory {
 	
 	public BaseDirectory(String name,
-			long lastModifiedDate, String attribiute,Path path) {
+			long lastModifiedDate, String attribiute,Path path,Icon icon) {
 		super(name, "", 0, lastModifiedDate, attribiute,path,
-				new ImageIcon(ImageService.getInstance().DIRECTORY_ICON));
+				icon);//new ImageIcon(ImageService.getInstance().DIRECTORY_ICON));
 		
-		boolean aa = true;
-		
-		BaseIconAndStringColumn n = new BaseIconAndStringColumn(name, icon);
-		n.setIsRowDirectory(aa);
-		
-		BaseExtensionColumn ext = new BaseExtensionColumn(extension);
-		ext.setIsRowDirectory(aa);
-		
-		DirectorySizeColumn dsc = new DirectorySizeColumn();
-		dsc.setIsRowDirectory(aa);
-		
-		LocaleDateColumn ldc = new LocaleDateColumn(lastModifiedDate);
-		ldc.setIsRowDirectory(aa);
-		
-		valuesTotable = new Object[]{n,
-				ext,
-				dsc,
-				ldc};
-		
+		valuesTotable = new Object[]{new BaseIconAndStringColumn(name, icon),
+				new BaseExtensionColumn(extension),new DirectorySizeColumn(),new LocaleDateColumn(lastModifiedDate)};
 		
 	}
 
@@ -72,26 +55,19 @@ public class BaseDirectory extends BaseFile implements Directory {
 		// TODO Auto-generated method stub
 		return valuesTotable[columnIndex];
 	}
-//	
-//	public DirectoryTableRow getTableRow() {
-//		// TODO Auto-generated method stub
-//		DirectoryTableRow dtr = new DirectoryTableRow();
-//		
-//		dtr.name = name;
-//		dtr.extension = extension;
-//		dtr.date = new LocaleDateColumn(lastModifiedDate);
-//		dtr.size = new DirectorySizeColumn();
-//		dtr.attribiute = new DirectoryAttributeColumn(attribiute);
-//		
-//		return dtr;
-//	}
 
 	public File getFile(int idx) {
 		return this.files.get(idx);
 	}
 
+	public void setFiles(List<File> fs) {
+		// TODO Auto-generated method stub
+		this.files = fs;
+	}
+	
 	@Override
 	public boolean isDirectory() {
+		// TODO Auto-generated method stub
 		return true;
 	}
 	

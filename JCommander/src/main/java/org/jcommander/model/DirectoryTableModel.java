@@ -16,6 +16,7 @@ import javax.swing.table.AbstractTableModel;
 import org.apache.log4j.Logger;
 import org.jcommander.core.DeviceChangeListener;
 import org.jcommander.core.DirectoryChangeListener;
+import org.jcommander.core.DirectoryContentChangeListener;
 import org.jcommander.core.action.Action;
 import org.jcommander.core.action.ActionExecuter;
 import org.jcommander.core.action.ActionService;
@@ -39,6 +40,8 @@ public class DirectoryTableModel extends AbstractTableModel implements LocaleCha
 		"table.column.date"};
 	
 	public static String DIRECTORY_SIZE = "<DIR>";
+	
+	private List<DirectoryContentChangeListener> directoryContentChangeListeners = new ArrayList<DirectoryContentChangeListener>();
 	
 	private List<DirectoryChangeListener> directoryChangeListeners = new ArrayList<DirectoryChangeListener>();
 	
@@ -74,7 +77,7 @@ public class DirectoryTableModel extends AbstractTableModel implements LocaleCha
 		this.directoryPathTextBox = directoryPathTextBox;
 		
 		try {
-			this.directory  = SystemService.getInstance().getDirectory(path);
+			setDirectory(SystemService.getInstance().getDirectory(path));
 			this.directoryPathTextBox.setText(path.getInTotalCommanderStyle());
 		} catch (InvalidDirectoryPathException e) {
 			// TODO Auto-generated catch block
@@ -136,7 +139,8 @@ public class DirectoryTableModel extends AbstractTableModel implements LocaleCha
 		 * UPDATE
 		 */
 		fireTableDataChanged();
-//		fireTableStructureChanged();
+		fireTableStructureChanged();
+		notifyDirectoryContentChangeListeners();
 	}
 
 	@Override
@@ -152,6 +156,10 @@ public class DirectoryTableModel extends AbstractTableModel implements LocaleCha
 
 	public List<File> getFiles(){
 		return this.directory.getFiles();
+	}
+	
+	public void setFiles(List<File> fs){
+		this.directory.setFiles(fs);
 	}
 	
 	public File getRowComponent(int rowIdx){
@@ -261,5 +269,30 @@ public class DirectoryTableModel extends AbstractTableModel implements LocaleCha
 		}
 		
 	}
+
+
+	public void refreshDataSource() {
+		try {
+			Directory d = SystemService.getInstance().getDirectory(this.directory.getPath());
+			setDirectory(d);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvalidDirectoryPathException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 	
+	
+	public void registerDirectoryContentChangeListener(DirectoryContentChangeListener li){
+		this.directoryContentChangeListeners.add(li);
+	}
+	
+	private void notifyDirectoryContentChangeListeners(){
+		for(DirectoryContentChangeListener l :directoryContentChangeListeners ){
+			l.onDirectorycontentChange();
+		}
+	}
 }

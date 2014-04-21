@@ -23,6 +23,7 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableRowSorter;
 
 import org.apache.log4j.Logger;
+import org.jcommander.core.ApplicationContext;
 import org.jcommander.core.action.Action;
 import org.jcommander.core.action.ActionExecuter;
 import org.jcommander.core.action.ActionService;
@@ -59,28 +60,12 @@ public class DirectoryViewJTable extends JTable {
 		this.addMouseListener(new TableMouseClickListener());
 		this.addKeyListener(new KeyboardListener());
 		
-//		this.setRowSorter(new DirectoryRowSorter(this.tableModel));
-		
 		TableColumnModel tcm = this.getColumnModel();
-//		tcm.getColumn(0).setCellRenderer(new IconTextCellRenderer());
+		tcm.getColumn(0).setCellRenderer(new IconTextCellRenderer());
 		
-		this.setAutoCreateRowSorter(true);
-		TableRowSorter sorter = (TableRowSorter) this.getRowSorter();
-		sorter.setComparator(
-				DirectoryTableRowComparatorService.FILE_NAME_COLUMN_INDEX, 
-				new BaseIconAndStringColumn(null, null));
-		sorter.setComparator(
-				DirectoryTableRowComparatorService.EXTENDSION_NAME_COLUMN_INDEX, 
-				new BaseExtensionColumn(null));
-		sorter.setComparator(
-				DirectoryTableRowComparatorService.SIZE_COLUMN_INDEX, 
-				new FileSizeColumn(0));
-		sorter.setComparator(
-				DirectoryTableRowComparatorService.DATE_COLUMN_INDEX, 
-				new LocaleDateColumn(0));
-		
-		
-		
+		DirectoryRowSorter sorter = new DirectoryRowSorter(this.tableModel);
+		this.setRowSorter(sorter);
+		this.tableModel.registerDirectoryContentChangeListener(sorter);
 //		this.getTableHeader().setDefaultRenderer(new DefaultTableCellRenderer());
 		
 		
@@ -207,6 +192,18 @@ public class DirectoryViewJTable extends JTable {
 				int row = rowsIds[rowsIds.length - 1];
 				
 				executeRow(row);
+			}
+			
+			if(e.getKeyChar() == KeyEvent.VK_F6){
+				ApplicationContext.getInstance().getOnMoveActionListsner().actionPerformed(null);
+			}
+			
+			if(e.getKeyChar() == KeyEvent.VK_F8 || e.getKeyChar() == KeyEvent.VK_DELETE){
+				ApplicationContext.getInstance().getOnDeleteActionListsner().actionPerformed(null);
+			}
+			
+			if(e.getKeyChar() == KeyEvent.VK_F5){
+				ApplicationContext.getInstance().getOnCopyActionListsner().actionPerformed(null);
 			}
 			
 			if(e.getKeyChar() == e.VK_BACK_SPACE){

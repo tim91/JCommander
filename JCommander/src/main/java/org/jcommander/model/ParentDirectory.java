@@ -16,28 +16,12 @@ public class ParentDirectory extends BaseFile implements Directory {
 		super("..", "", 0, lastModifiedDate, attribiute, path, 
 				new ImageIcon(ImageService.getInstance().PARENT_DIRECTORY_ICON));
 		
-boolean aa = true;
+		valuesTotable = new Object[]{new BaseIconAndStringColumn(name, icon),new BaseExtensionColumn(extension),new DirectorySizeColumn(),new LocaleDateColumn(lastModifiedDate)};
 		
-		BaseIconAndStringColumn n = new BaseIconAndStringColumn(name, icon);
-		n.setIsRowDirectory(aa);
-		
-		BaseExtensionColumn ext = new BaseExtensionColumn(extension);
-		ext.setIsRowDirectory(aa);
-		
-		DirectorySizeColumn dsc = new DirectorySizeColumn();
-		dsc.setIsRowDirectory(aa);
-		
-		LocaleDateColumn ldc = new LocaleDateColumn(lastModifiedDate);
-		ldc.setIsRowDirectory(aa);
-		
-		valuesTotable = new Object[]{n,
-				ext,
-				dsc,
-				ldc};
 	}
 
 	/*
-	 * We dont have childs here
+	 * We don't have childs here
 	 */
 	
 	public int getDirectoriesNum() {
@@ -70,8 +54,14 @@ boolean aa = true;
 		throw new UnsupportedOperationException();
 	}
 
+	public void setFiles(List<File> fs) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException();
+	}
+	
 	@Override
 	public boolean isDirectory() {
+		// TODO Auto-generated method stub
 		return true;
 	}
 

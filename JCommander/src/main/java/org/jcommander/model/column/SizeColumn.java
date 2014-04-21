@@ -1,6 +1,6 @@
 package org.jcommander.model.column;
 
-public interface SizeColumn {
+public interface SizeColumn extends Column {
 	
 	public long getValue();
 }

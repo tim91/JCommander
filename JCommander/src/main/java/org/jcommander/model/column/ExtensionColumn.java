@@ -1,5 +1,5 @@
 package org.jcommander.model.column;
 
-public interface ExtensionColumn {
+public interface ExtensionColumn extends Column {
 
 }

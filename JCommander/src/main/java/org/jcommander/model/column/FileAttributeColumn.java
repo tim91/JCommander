@@ -1,6 +1,6 @@
 package org.jcommander.model.column;
 
-public class FileAttributeColumn implements AttributeColumn {
+public class FileAttributeColumn implements AttributeColumn  {
 
 	private String attr;
 	

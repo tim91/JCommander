@@ -157,7 +157,7 @@ public class SystemService {
 		
 		String label = f.getAbsolutePath().split(":")[0];
 		Device device = getDeviceByLabel(label);
-		Directory dir = new BaseDirectory(f.getName(), f.lastModified(), "---",new BasePath(f.getAbsolutePath(),device));
+		Directory dir = new BaseDirectory(f.getName(), f.lastModified(), "---",new BasePath(f.getAbsolutePath(),device),this.fileSystemView.getSystemIcon(f));
 		
 		
 		File [] files = f.listFiles();
@@ -175,7 +175,7 @@ public class SystemService {
 				continue;
 			
 			if(file.isDirectory()){
-				ff = new BaseDirectory(name, file.lastModified(),"---", new BasePath(file.getAbsolutePath(),device));
+				ff = new BaseDirectory(name, file.lastModified(),"---", new BasePath(file.getAbsolutePath(),device),this.fileSystemView.getSystemIcon(file));
 			}else if(file.isFile()){
 				String ext = "";
 				int index = file.getName().lastIndexOf(".");

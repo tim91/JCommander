@@ -32,45 +32,8 @@ public class BaseFile implements File{
 		this.path = path;
 		this.icon = icon;
 		
-//		valuesTotable = new Object[]{new BaseIconAndStringColumn(name, icon),extension,new FileSizeColumn(size),new LocaleDateColumn(lastModifiedDate)};
-		
-		
-		BaseIconAndStringColumn n = new BaseIconAndStringColumn(name, icon);
-		n.setIsRowDirectory(isDirectory());
-		
-		BaseExtensionColumn ext = new BaseExtensionColumn(extension);
-		ext.setIsRowDirectory(isDirectory());
-		
-		FileSizeColumn dsc = new FileSizeColumn(size);
-		dsc.setIsRowDirectory(isDirectory());
-		
-		LocaleDateColumn ldc = new LocaleDateColumn(lastModifiedDate);
-		ldc.setIsRowDirectory(isDirectory());
-		
-		valuesTotable = new Object[]{n,
-				ext,
-				dsc,
-				ldc};
-		
-		
+		valuesTotable = new Object[]{new BaseIconAndStringColumn(name, icon),new BaseExtensionColumn(extension),new FileSizeColumn(size),new LocaleDateColumn(lastModifiedDate)};
 	}
-
-//
-//
-//	public DirectoryTableRow getTableRow() {
-//		// TODO Auto-generated method stub
-//		DirectoryTableRow dtr = new DirectoryTableRow();
-//		
-//		dtr.name = name;
-//		dtr.extension = extension;
-//		dtr.date = new LocaleDateColumn(lastModifiedDate);
-//		dtr.size = new FileSizeColumn(size);
-//		dtr.attribiute = new FileAttributeColumn(attribiute);
-//		
-//		return dtr;
-//	}
-
-
 
 	public Object getValueByColumnIndex(int columnIndex) {
 		// TODO Auto-generated method stub
@@ -87,20 +50,8 @@ public class BaseFile implements File{
 		return icon;
 	}
 
-	public int compareTo(File f2) {
-		
-		if(this instanceof Directory)
-			return 1;
-		else if((this instanceof File) && (f2 instanceof Directory)){
-			return -1;
-		}
-		else
-			return 0;
-	}
-
 	public boolean isDirectory() {
+		// TODO Auto-generated method stub
 		return false;
 	}
-
-	
 }

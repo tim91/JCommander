@@ -78,20 +78,7 @@ public class JCommanderUtils {
 		DirectoryViewJTable toTable = null;
 		fromTable = (DirectoryViewJTable) getSpecifiedComponentInContainer((Container) c1, "Sdf");
 		toTable = (DirectoryViewJTable) getSpecifiedComponentInContainer((Container) c2, "Sdf");
-//		logger.debug("c1 is focused? " +c1.isFocusOwner() );
-//		logger.debug("c2 is focused? " +c2.isFocusOwner() );
-//		Component cc = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
-//		if(c1.isFocusOwner()){
-//			//destination
-//			
-//			
-//		}else{
-//			fromTable = (DirectoryViewJTable) getSpecifiedComponentInContainer((Container) c2, "Sdf");
-//			toTable = (DirectoryViewJTable) getSpecifiedComponentInContainer((Container) c1, "Sdf");
-//		}
-		
-		logger.debug("c1 is focused? " +fromTable.isFocusOwner() );
-		logger.debug("c2 is focused? " +toTable.isFocusOwner() );
+
 		from = getSelectedRows(fromTable);
 		to = getDirectoryInTable(toTable);
 		
@@ -102,11 +89,12 @@ public class JCommanderUtils {
 		DirectoryTableModel dtm = (DirectoryTableModel) table.getModel();
 		List<File> files = new ArrayList<File>();
 		int [] rows = table.getSelectedRows();
-		if(rows.length == 0){
-			table.setRowSelectionInterval(0, 0);
-			rows = new int[1];
-			rows[0] = 0;
-		}
+		
+//		if(rows.length == 0){
+//			table.setRowSelectionInterval(0, 0);
+//			rows = new int[1];
+//			rows[0] = 0;
+//		}
 		
 		for (int i : rows) {
 			Object o = dtm.getRowComponent(i);

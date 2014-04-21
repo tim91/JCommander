@@ -1,6 +1,6 @@
 package org.jcommander.model.column;
 
-public interface DateColumn {
+public interface DateColumn extends Column {
 
 	public long getValue();
 }

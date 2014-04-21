@@ -128,6 +128,7 @@ public class ContentPanel extends JPanel {
         	JTextField directoryPathTextField = new CustomJTextField();
         	directoryPathTextField.setBackground(ColorUtils.ACTUAL_DIRECTORY_PATH);
         	directoryPathTextField.setEditable(false);
+        	directoryPathTextField.setFocusable(false);
         	
         	LocaleParametrizedJLabel directoryInformation = new LocaleParametrizedJLabel("label.paramterized.directoryInformation");
         	
