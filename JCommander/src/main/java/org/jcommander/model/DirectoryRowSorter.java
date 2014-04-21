@@ -8,10 +8,10 @@ import java.util.Map;
 import javax.swing.table.TableRowSorter;
 
 import org.apache.log4j.Logger;
-import org.jcommander.core.DirectoryContentChangeListener;
 import org.jcommander.core.comparator.AbstractColumnComparator;
 import org.jcommander.core.comparator.DirectoryTableRowComparator;
 import org.jcommander.core.comparator.DirectoryTableRowComparatorService;
+import org.jcommander.core.listener.DirectoryContentChangeListener;
 import org.jcommander.model.column.IconAndStringColumn;
 
 public class DirectoryRowSorter extends TableRowSorter<DirectoryTableModel> implements DirectoryContentChangeListener {

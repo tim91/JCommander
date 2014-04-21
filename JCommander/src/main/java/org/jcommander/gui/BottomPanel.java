@@ -16,6 +16,7 @@ import javax.swing.JPanel;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.jcommander.core.ApplicationContext;
+import org.jcommander.core.action.AbstractAction;
 import org.jcommander.core.action.Action;
 import org.jcommander.core.action.ActionService;
 import org.jcommander.core.action.CopyAction;
@@ -57,7 +58,7 @@ public class BottomPanel extends JPanel {
 				
 				Pair<List<File>, Directory> fromTo = JCommanderUtils.extractFromAndToLocation(panels);
 				
-				Action copyAction = new CopyAction(fromTo.getLeft(), fromTo.getRight().getPath());
+				AbstractAction copyAction = new CopyAction(fromTo.getLeft(), fromTo.getRight().getPath());
 				
 				ActionService.getInstance().getActionExecuter().executeAction(copyAction);
 				
@@ -74,7 +75,7 @@ public class BottomPanel extends JPanel {
 				
 				Pair<List<File>, Directory> fromTo = JCommanderUtils.extractFromAndToLocation(panels);
 				
-				Action copyAction = new MoveAction(fromTo.getLeft(), fromTo.getRight().getPath());
+				AbstractAction copyAction = new MoveAction(fromTo.getLeft(), fromTo.getRight().getPath());
 				
 				ActionService.getInstance().getActionExecuter().executeAction(copyAction);
 				
@@ -100,7 +101,7 @@ public class BottomPanel extends JPanel {
 					filesToDelete.add(f);
 				}
 				
-				Action deleteAction = new DeleteAction(filesToDelete);
+				AbstractAction deleteAction = new DeleteAction(filesToDelete);
 				
 				ActionService.getInstance().getActionExecuter().executeAction(deleteAction);
 				

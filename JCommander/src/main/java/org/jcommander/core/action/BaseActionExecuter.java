@@ -5,12 +5,18 @@ import org.jcommander.core.ApplicationContext;
 
 public class BaseActionExecuter implements ActionExecuter {
 
-	public void executeAction(Action action) {
+	public void executeAction(final AbstractAction action) {
 		
 		/*
 		 * Tutaj moglbym robic jeszcze inne rzeczy
 		 */
-		action.execute();
+		
+		try {
+			action.doInBackground();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

@@ -6,8 +6,11 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JFrame;
+
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
+import org.jcommander.core.listener.DirectoryTableFocusOwnerChangeListsner;
 import org.jcommander.core.util.JCommanderUtils;
 import org.jcommander.gui.CustomJTabbedPane;
 import org.jcommander.gui.DirectoryViewJTable;
@@ -38,6 +41,16 @@ public class ApplicationContext implements DirectoryTableFocusOwnerChangeListsne
 		}
 	}
 	
+	private static JFrame mainApplicationWindow;
+	
+	public JFrame getMainApplicationWindow() {
+		return mainApplicationWindow;
+	}
+
+	public void setMainApplicationWindow(JFrame mainApplicationWindow) {
+		this.mainApplicationWindow = mainApplicationWindow;
+	}
+
 	private static List<CustomJTabbedPane> tabbedPanels = new ArrayList<CustomJTabbedPane>();
 	
 	public void regiseterTabbedPane(CustomJTabbedPane tabbed){

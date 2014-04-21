@@ -1,5 +1,6 @@
 package org.jcommander.gui;
 
+import java.applet.AppletContext;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
@@ -25,12 +26,14 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import org.apache.log4j.Logger;
+import org.jcommander.core.ApplicationContext;
 import org.jcommander.core.image.ImageService;
 import org.jcommander.gui.locale.LocaleContext;
 import org.jcommander.gui.locale.LocaleUtils;
 import org.jcommander.gui.locale.components.LocaleJMenu;
 import org.jcommander.gui.locale.components.LocaleJMenuItem;
 import org.jcommander.gui.locale.components.LocaleSelectorJMenuItem;
+import org.omg.CORBA.portable.ApplicationException;
 
 public class JCommander {
 	
@@ -167,6 +170,8 @@ public class JCommander {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(950, 650);
 		frame.setVisible(true);
+		
+		ApplicationContext.getInstance().setMainApplicationWindow(frame);
 	}
 
 }

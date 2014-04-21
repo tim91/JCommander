@@ -6,7 +6,7 @@ import java.io.IOException;
 
 import org.jcommander.model.Path;
 
-public class OpenFileAction extends AbstractAction implements Action {
+public class OpenFileAction extends AbstractAction {
 
 	Path path;
 	
@@ -15,7 +15,7 @@ public class OpenFileAction extends AbstractAction implements Action {
 		this.path = path;
 	}
 	
-	public void execute() {
+	public void executeTask() {
 		
 		try {
 			Desktop.getDesktop().open(new File(this.path.toString()));

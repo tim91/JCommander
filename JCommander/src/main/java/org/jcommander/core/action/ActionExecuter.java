@@ -4,6 +4,6 @@ package org.jcommander.core.action;
 public interface ActionExecuter {
 
 	
-	public void executeAction(Action action);
+	public void executeAction(AbstractAction action);
 	
 }

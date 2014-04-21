@@ -1,4 +1,4 @@
-package org.jcommander.core;
+package org.jcommander.core.listener;
 
 public interface ChildFocusedListener {
 

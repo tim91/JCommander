@@ -27,8 +27,9 @@ import org.jcommander.util.exception.SingletonException;
 
 public class SystemService {
 
-	static Logger logger = Logger.getLogger("org.jcommander.core.system.System");
-	
+	static Logger logger = Logger
+			.getLogger("org.jcommander.core.system.System");
+
 	private static SystemService system = null;
 
 	private FileSystemView fileSystemView = null;
@@ -43,60 +44,61 @@ public class SystemService {
 
 	}
 
-	public Device getDeviceByLabel(String lab){
+	public Device getDeviceByLabel(String lab) {
 		List<File> files = Arrays.asList(File.listRoots());
 		for (File f : files) {
 			String deviceName = this.fileSystemView.getSystemDisplayName(f);
-			
-			if(deviceName == null || deviceName.length() == 0)
+
+			if (deviceName == null || deviceName.length() == 0)
 				continue;
-			
+
 			String label = JCommanderUtils.ExtractDeviceLabel(deviceName);
-			
-			if(lab.toLowerCase().equals(label.toLowerCase())){
+
+			if (lab.toLowerCase().equals(label.toLowerCase())) {
 				String name = JCommanderUtils.ExtractDeviceName(deviceName);
 				Icon icon = this.fileSystemView.getSystemIcon(f);
-				
+
 				logger.debug("Otrzymany ciag: " + deviceName);
 				logger.debug("Nazwa : " + name);
 				logger.debug("Label: " + label);
 				logger.debug("Ikona: " + icon);
-				
+
 				long totalSpace = f.getTotalSpace();
 				long freeSpace = f.getFreeSpace();
-				
-				return new BaseDevice(label, name, freeSpace/1024, totalSpace/1024,icon);
+
+				return new BaseDevice(label, name, freeSpace / 1024,
+						totalSpace / 1024, icon);
 			}
-			
+
 		}
 		return null;
 	}
-	
+
 	public List<Device> getDevices() {
 		List<Device> devices = new ArrayList<Device>(2);
 
 		List<File> files = Arrays.asList(File.listRoots());
 		for (File f : files) {
 			String deviceName = this.fileSystemView.getSystemDisplayName(f);
-			
-			
-			if(deviceName == null || deviceName.length() == 0)
+
+			if (deviceName == null || deviceName.length() == 0)
 				continue;
-			
+
 			String label = JCommanderUtils.ExtractDeviceLabel(deviceName);
 			String name = JCommanderUtils.ExtractDeviceName(deviceName);
 			Icon icon = this.fileSystemView.getSystemIcon(f);
-			
+
 			logger.debug("Otrzymany ciag: " + deviceName);
 			logger.debug("Nazwa : " + name);
 			logger.debug("Label: " + label);
 			logger.debug("Ikona: " + icon);
-			
+
 			long totalSpace = f.getTotalSpace();
 			long freeSpace = f.getFreeSpace();
-			
-			devices.add(new BaseDevice(label, name, freeSpace/1024, totalSpace/1024,icon));
-			
+
+			devices.add(new BaseDevice(label, name, freeSpace / 1024,
+					totalSpace / 1024, icon));
+
 		}
 
 		return devices;
@@ -117,185 +119,253 @@ public class SystemService {
 		}
 
 	}
-	
-	
-	public Directory getParentDirectory(Path path) throws FileNotFoundException, InvalidDirectoryPathException{
+
+	public Directory getParentDirectory(Path path)
+			throws FileNotFoundException, InvalidDirectoryPathException {
 		String p = path.toString();
-		
+
 		File f = new File(p);
-		
-		if(!f.exists()){
+
+		if (!f.exists()) {
 			throw new FileNotFoundException();
 		}
-		
-		if(!f.isDirectory()){
+
+		if (!f.isDirectory()) {
 			throw new InvalidDirectoryPathException();
 		}
-		
-		
+
 		String label = f.getAbsolutePath().split(":")[0];
 		Device device = getDeviceByLabel(label);
-		Directory dir = new ParentDirectory(f.lastModified(), "---",new BasePath(f.getAbsolutePath(),device));
+		Directory dir = new ParentDirectory(f.lastModified(), "---",
+				new BasePath(f.getAbsolutePath(), device));
 		return dir;
 	}
-	
-	
-	public Directory getDirectory(Path path) throws InvalidDirectoryPathException, FileNotFoundException {
-		
+
+	public Directory getDirectory(Path path)
+			throws InvalidDirectoryPathException, FileNotFoundException {
+
 		String p = path.toString();
-		
+
 		File f = new File(p);
-		
-		if(!f.exists()){
+
+		if (!f.exists()) {
 			throw new FileNotFoundException();
 		}
-		
-		if(!f.isDirectory()){
+
+		if (!f.isDirectory()) {
 			throw new InvalidDirectoryPathException();
 		}
-		
-		
+
 		String label = f.getAbsolutePath().split(":")[0];
 		Device device = getDeviceByLabel(label);
-		Directory dir = new BaseDirectory(f.getName(), f.lastModified(), "---",new BasePath(f.getAbsolutePath(),device),this.fileSystemView.getSystemIcon(f));
-		
-		
-		File [] files = f.listFiles();
+		Directory dir = new BaseDirectory(f.getName(), f.lastModified(), "---",
+				new BasePath(f.getAbsolutePath(), device),
+				this.fileSystemView.getSystemIcon(f));
+
+		File[] files = f.listFiles();
 		for (File file : files) {
-			
+
 			org.jcommander.model.File ff = null;
-			
+
 			String name = file.getName();
-			if(name.contains(".") && 
-					name.lastIndexOf(".") > 0){ // check if '.' is not first sign in file name
+			if (name.contains(".") && name.lastIndexOf(".") > 0) { // check if
+																	// '.' is
+																	// not first
+																	// sign in
+																	// file name
 				name = name.substring(0, name.lastIndexOf("."));
 			}
-			
-			if(file.isHidden())
+
+			if (file.isHidden())
 				continue;
-			
-			if(file.isDirectory()){
-				ff = new BaseDirectory(name, file.lastModified(),"---", new BasePath(file.getAbsolutePath(),device),this.fileSystemView.getSystemIcon(file));
-			}else if(file.isFile()){
+
+			if (file.isDirectory()) {
+				ff = new BaseDirectory(name, file.lastModified(), "---",
+						new BasePath(file.getAbsolutePath(), device),
+						this.fileSystemView.getSystemIcon(file));
+			} else if (file.isFile()) {
 				String ext = "";
 				int index = file.getName().lastIndexOf(".");
-				if(index > 0){
+				if (index > 0) {
 					ext += file.getName().substring(index);
 				}
-				
-				logger.debug(this.fileSystemView.getSystemIcon(file).getIconHeight());
-				
-				ff = new BaseFile(name,ext,file.length(),file.lastModified(),"---",new BasePath(file.getAbsolutePath(),device),
+
+				logger.debug(this.fileSystemView.getSystemIcon(file)
+						.getIconHeight());
+
+				ff = new BaseFile(name, ext, file.length(),
+						file.lastModified(), "---", new BasePath(
+								file.getAbsolutePath(), device),
 						this.fileSystemView.getSystemIcon(file));
 			}
-			
-			if(ff != null){
+
+			if (ff != null) {
 				dir.addFile(ff);
 			}
-			
+
 		}
-		
+
 		return dir;
 	}
-	
+
 	private int BUFFER_SIZE = 1024;
-	
-	public boolean copyDirectory(File from, File to, byte[] buffer) {
-	    //
-	    // System.out.println("copyDirectory("+from+","+to+")");
 
-	    if (from == null)
-	      return false;
-	    if (!from.exists())
-	      return true;
-	    if (!from.isDirectory())
-	      return false;
+	public boolean copyDirectory(File from, File to, byte[] buffer, Boolean threadAlive) {
+		//
+		// System.out.println("copyDirectory("+from+","+to+")");
 
-	    if (to.exists()) {
-	      // System.out.println(to + " exists");
-	      return false;
-	    }
-	    if (!to.mkdirs()) {
-	      // System.out.println("can't make" + to);
-	      return false;
-	    }
+		if(threadAlive.booleanValue() == false){
+			return false;
+		}
+		
+		if (from == null)
+			return false;
+		if (!from.exists())
+			return true;
+		if (!from.isDirectory())
+			return false;
 
-	    String[] list = from.list();
+		if (to.exists()) {
+			return false;
+		}
+		if (!to.mkdirs()) {
+			return false;
+		}
 
-	    // Some JVMs return null for File.list() when the
-	    // directory is empty.
-	    if (list != null) {
+		String[] list = from.list();
 
-	      if (buffer == null)
-	        buffer = new byte[BUFFER_SIZE]; // reuse this buffer to copy files
+		if (list != null) {
 
-	      nextFile: for (int i = 0; i < list.length; i++) {
+			if (buffer == null)
+				buffer = new byte[BUFFER_SIZE]; // reuse this buffer to copy
+												// files
 
-	        String fileName = list[i];
+			for (int i = 0; i < list.length; i++) {
 
-	        File entry = new File(from, fileName);
+				String fileName = list[i];
 
-	        // System.out.println("\tcopying entry " + entry);
+				File entry = new File(from, fileName);
 
-	        if (entry.isDirectory()) {
-	          if (!copyDirectory(entry, new File(to, fileName), buffer))
-	            return false;
-	        } else {
-	          if (!copyFile(entry, new File(to, fileName), buffer))
-	            return false;
-	        }
-	      }
-	    }
-	    return true;
-	  }
-	
-	
-	public boolean copyFile(File from, File to) {
-	    return copyFile(from, to, (byte[]) null);
+				if (entry.isDirectory()) {
+					if (!copyDirectory(entry, new File(to, fileName), buffer,threadAlive))
+						return false;
+				} else {
+					if (!copyFile(entry, new File(to, fileName), buffer,threadAlive))
+						return false;
+				}
+			}
+		}
+		return true;
 	}
-	
-	public boolean copyFile(File from, File to, byte[] buf) {
-	    if (buf == null)
-	      buf = new byte[BUFFER_SIZE];
 
-	    //
-	    // System.out.println("Copy file ("+from+","+to+")");
-	    FileInputStream from_s = null;
-	    FileOutputStream to_s = null;
+	public boolean copyFile(File from, File to,Boolean threadAlive) {
+		return copyFile(from, to, (byte[]) null,threadAlive);
+	}
 
-	    try {
-	      from_s = new FileInputStream(from);
-	      to_s = new FileOutputStream(to);
+	public boolean copyFile(File from, File to, byte[] buf,Boolean threadAlive) {
+		if (buf == null)
+			buf = new byte[BUFFER_SIZE];
 
-	      for (int bytesRead = from_s.read(buf); bytesRead != -1; bytesRead = from_s.read(buf))
-	        to_s.write(buf, 0, bytesRead);
+		if(threadAlive.booleanValue() == false){
+			return false;
+		}
+		
+		FileInputStream from_s = null;
+		FileOutputStream to_s = null;
 
-	      from_s.close();
-	      from_s = null;
+		
+		boolean operationTerminated = false;
+		try {
+			from_s = new FileInputStream(from);
+			to_s = new FileOutputStream(to);
+			
+			for (int bytesRead = from_s.read(buf); bytesRead != -1; bytesRead = from_s
+					.read(buf)){
+				if(threadAlive.booleanValue() == false){
+					// Delete this file
+					operationTerminated = true;
+					break;
+				}
+				to_s.write(buf, 0, bytesRead);
+			}
+				
 
-	      to_s.getFD().sync(); // RESOLVE: sync or no sync?
-	      to_s.close();
-	      to_s = null;
-	    } catch (IOException ioe) {
-	    	ioe.printStackTrace();
-	      return false;
-	    } finally {
-	      if (from_s != null) {
-	        try {
-	          from_s.close();
-	        } catch (IOException ioe) {
-	        }
-	      }
-	      if (to_s != null) {
-	        try {
-	          to_s.close();
-	        } catch (IOException ioe) {
-	        }
-	      }
-	    }
+			from_s.close();
+			from_s = null;
 
-	    return true;
-	  }
-	
+			to_s.getFD().sync();
+			to_s.close();
+			to_s = null;
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+			return false;
+		} finally {
+			if (from_s != null) {
+				try {
+					from_s.close();
+				} catch (IOException ioe) {
+				}
+			}
+			if (to_s != null) {
+				try {
+					to_s.close();
+				} catch (IOException ioe) {
+				}
+			}
+			if(operationTerminated){
+				to.delete();
+				return false;
+			}
+		}
 
+		return true;
+	}
+
+	public static void deleteDirectory(File file, Boolean threadAlive) {
+		
+		if(threadAlive.booleanValue() == false){
+			return;
+		}
+		
+		if (file.isDirectory()) {
+
+			// directory is empty, then delete it
+			if (file.list().length == 0) {
+
+				file.delete();
+				logger.debug("Directory is deleted : "
+						+ file.getAbsolutePath());
+
+			} else {
+
+				// list all the directory contents
+				String files[] = file.list();
+
+				for (String temp : files) {
+					// construct the file structure
+					File fileDelete = new File(file, temp);
+
+					// recursive delete
+					deleteDirectory(fileDelete,threadAlive);
+					
+					if(threadAlive.booleanValue() == false){
+						return;
+					}
+					
+				}
+
+				// check the directory again, if empty then delete it
+				if (file.list().length == 0) {
+					file.delete();
+					logger.debug("Directory is deleted : "
+							+ file.getAbsolutePath());
+				}
+			}
+
+		} else {
+			// if file, then delete it
+			file.delete();
+			logger.debug("File is deleted : " + file.getAbsolutePath());
+		}
+	}
 }

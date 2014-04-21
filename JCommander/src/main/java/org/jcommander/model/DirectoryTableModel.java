@@ -14,13 +14,13 @@ import javax.swing.event.TableColumnModelListener;
 import javax.swing.table.AbstractTableModel;
 
 import org.apache.log4j.Logger;
-import org.jcommander.core.DeviceChangeListener;
-import org.jcommander.core.DirectoryChangeListener;
-import org.jcommander.core.DirectoryContentChangeListener;
 import org.jcommander.core.action.Action;
 import org.jcommander.core.action.ActionExecuter;
 import org.jcommander.core.action.ActionService;
 import org.jcommander.core.action.ChangeDirectoryAction;
+import org.jcommander.core.listener.DeviceChangeListener;
+import org.jcommander.core.listener.DirectoryChangeListener;
+import org.jcommander.core.listener.DirectoryContentChangeListener;
 import org.jcommander.core.system.SystemService;
 import org.jcommander.gui.locale.LocaleChangeListener;
 import org.jcommander.gui.locale.LocaleContext;
@@ -215,61 +215,12 @@ public class DirectoryTableModel extends AbstractTableModel implements LocaleCha
 		 */
 		
 		if(!this.directory.getPath().equals(path)){
-			Action a = new ChangeDirectoryAction(this.directory.getPath(), path, this);
+			org.jcommander.core.action.AbstractAction a = new ChangeDirectoryAction(this.directory.getPath(), path, this);
 			ActionExecuter aex = ActionService.getInstance().getActionExecuter();
 			aex.executeAction(a);
 		}
 		
 	}
-	
-	
-//	public void insertInformationToTable(){
-//		logger.debug("Dodaje informacje do tabelki z widokiem folderu");
-//		
-//		Directory directory = null;
-//		try {
-//			directory = SystemService.getInstance().getDirectory(this.path);
-//		} catch (InvalidDirectoryPathException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (FileNotFoundException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		
-//		this.tableModel.setDirectory(directory);
-//	}
-	
-	private class DirectoryTableColumnModelListener implements TableColumnModelListener
-	{
-
-		public void columnAdded(TableColumnModelEvent e) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		public void columnMarginChanged(ChangeEvent e) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		public void columnMoved(TableColumnModelEvent e) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		public void columnRemoved(TableColumnModelEvent e) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		public void columnSelectionChanged(ListSelectionEvent e) {
-			// TODO Auto-generated method stub
-			
-		}
-		
-	}
-
 
 	public void refreshDataSource() {
 		try {

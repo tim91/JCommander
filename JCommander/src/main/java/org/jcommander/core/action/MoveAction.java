@@ -7,12 +7,13 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.jcommander.core.ApplicationContext;
+import org.jcommander.core.listener.ActionTerminateListener;
 import org.jcommander.model.Directory;
 import org.jcommander.model.File;
 import org.jcommander.model.ParentDirectory;
 import org.jcommander.model.Path;
 
-public class MoveAction extends AbstractAction implements Action {
+public class MoveAction extends AbstractAction implements ActionTerminateListener {
 
 	static Logger logger = Logger
 			.getLogger("org.jcommander.core.action.MoveAction");
@@ -25,12 +26,13 @@ public class MoveAction extends AbstractAction implements Action {
 		this.toMove = toMove;
 		this.destination = destination;
 	}
-	public void execute() {
+	public void executeTask() {
 		
 		if(toMove.size() == 0 || (toMove.size() == 1 && toMove.get(0) instanceof ParentDirectory)){
 			/*
 			 * Not selected files
 			 */
+			showNoFileSelectedDialog();
 			return;
 		}
 		
@@ -41,22 +43,26 @@ public class MoveAction extends AbstractAction implements Action {
 			if(f instanceof ParentDirectory)
 				continue;
 			
+			if(threadIsAlive == false){
+				break;
+			}
+			
 			java.io.File from = new java.io.File(f.getPath().toString());
 			java.io.File to = new java.io.File(toDirectory.getAbsolutePath() + "\\" + f.getPath().getLeaf());
 			if(f instanceof Directory){
-				boolean status = systemService.copyDirectory(from,to, null);
+				boolean status = systemService.copyDirectory(from,to, null,threadIsAlive);
 				if(status == true){
-					try {
-						FileUtils.deleteDirectory(from);
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-						status = false;
-					}
+//					try {
+						systemService.deleteDirectory(from, threadIsAlive);
+//					} catch (IOException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//						status = false;
+//					}
 				}
 				logger.debug("Status przenoszenia folderu " + status);
 			}else{
-				boolean status = systemService.copyFile(from, to);
+				boolean status = systemService.copyFile(from, to,threadIsAlive);
 				if(status == true){
 					status = from.delete();
 				}
@@ -71,6 +77,9 @@ public class MoveAction extends AbstractAction implements Action {
 		
 		ApplicationContext.getInstance().refreshTabbedPanels();
 		
+	}
+	public void onTermination() {
+		threadIsAlive = false;
 	}
 
 	

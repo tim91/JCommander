@@ -8,7 +8,7 @@ import org.jcommander.model.DirectoryTableModel;
 import org.jcommander.model.Path;
 import org.jcommander.util.exception.InvalidDirectoryPathException;
 
-public class ChangeDirectoryAction extends AbstractAction implements Action {
+public class ChangeDirectoryAction extends AbstractAction{
 
 	static Logger logger = Logger
 			.getLogger("org.jcommander.core.action.ChangeDirectoryAction");
@@ -27,7 +27,7 @@ public class ChangeDirectoryAction extends AbstractAction implements Action {
 		this.directoryTableModel = directoryTableModel;
 	}
 
-	public void execute() {
+	public void executeTask() {
 	
 		logger.debug("Przechoidze z folderu : " + from + " do " + to);
 		

@@ -10,9 +10,9 @@ import javax.swing.event.ChangeListener;
 
 import org.apache.log4j.Logger;
 import org.jcommander.core.ApplicationContext;
-import org.jcommander.core.ChildFocusedListener;
-import org.jcommander.core.DeviceChangeListener;
-import org.jcommander.core.DirectoryChangeListener;
+import org.jcommander.core.listener.ChildFocusedListener;
+import org.jcommander.core.listener.DeviceChangeListener;
+import org.jcommander.core.listener.DirectoryChangeListener;
 import org.jcommander.core.util.JCommanderUtils;
 import org.jcommander.model.DirectoryTableModel;
 import org.jcommander.model.Path;

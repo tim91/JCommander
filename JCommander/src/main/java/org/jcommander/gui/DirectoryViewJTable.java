@@ -153,11 +153,10 @@ public class DirectoryViewJTable extends JTable {
 
 		ActionExecuter ae = actionService.getActionExecuter();
 
-		Action action = null;
+		org.jcommander.core.action.AbstractAction action = null;
 
 		if (fileSelected instanceof Directory) {
-			action = new ChangeDirectoryAction(dtm.getDirectory()
-					.getPath(), fileSelected.getPath(), dtm);
+			action = new ChangeDirectoryAction(dtm.getDirectory().getPath(), fileSelected.getPath(), dtm);
 		} else {
 			action = new OpenFileAction(fileSelected.getPath());
 		}

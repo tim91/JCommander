@@ -17,8 +17,8 @@ import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 
 import org.apache.log4j.Logger;
-import org.jcommander.core.DirectoryChangeListener;
-import org.jcommander.core.DeviceChangeListener;
+import org.jcommander.core.listener.DeviceChangeListener;
+import org.jcommander.core.listener.DirectoryChangeListener;
 import org.jcommander.core.system.SystemService;
 import org.jcommander.core.util.ColorUtils;
 import org.jcommander.core.util.JCommanderUtils;
