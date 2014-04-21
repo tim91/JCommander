@@ -11,12 +11,6 @@ public class BaseActionExecuter implements ActionExecuter {
 		 * Tutaj moglbym robic jeszcze inne rzeczy
 		 */
 		action.execute();
-		
-		/*
-		 * Refresh table with directory view after finished action
-		 */
-		
-		ApplicationContext.getInstance().refreshTabbedPanels();
 	}
 
 }

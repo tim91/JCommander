@@ -73,7 +73,13 @@ public class DirectoryRowSorter extends TableRowSorter<DirectoryTableModel> impl
 
 
 	public void onDirectorycontentChange() {
+		/*
+		 * We don't want change direction, this is refresh not user sort action
+		 */
+		boolean dir = columnToCurrentSortDirection.get(0);
+		columnToCurrentSortDirection.put(0, !dir);
 		toggleSortOrder(0);
+		
 	}
 
 }

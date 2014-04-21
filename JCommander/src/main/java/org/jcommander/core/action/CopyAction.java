@@ -50,6 +50,12 @@ public class CopyAction extends AbstractAction implements Action {
 			
 		}
 		
+		/*
+		 * Refresh table with directory view after finished action
+		 */
+		
+		ApplicationContext.getInstance().refreshTabbedPanels();
+		
 		
 	}
 

@@ -57,6 +57,12 @@ public class ApplicationContext implements DirectoryTableFocusOwnerChangeListsne
 		}
 	}
 	
+	public void refreshFocusedPanel(){
+		DirectoryViewJTable table = (DirectoryViewJTable) JCommanderUtils.getSpecifiedComponentInContainer((Container)lastFocusedDirectoryComponent, "dsf");
+		refreshTable(table);
+		
+	}
+	
 	private void refreshTable(DirectoryViewJTable table){
 		DirectoryTableModel model = (DirectoryTableModel) table.getModel();
 		model.refreshDataSource();

@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
+import org.jcommander.core.ApplicationContext;
 import org.jcommander.model.Directory;
 import org.jcommander.model.File;
 import org.jcommander.model.ParentDirectory;
@@ -63,6 +64,12 @@ public class MoveAction extends AbstractAction implements Action {
 			}
 			
 		}
+		
+		/*
+		 * Refresh table with directory view after finished action
+		 */
+		
+		ApplicationContext.getInstance().refreshTabbedPanels();
 		
 	}
 
