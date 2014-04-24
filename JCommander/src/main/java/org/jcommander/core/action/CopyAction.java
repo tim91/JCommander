@@ -72,7 +72,6 @@ public class CopyAction extends AbstractAction implements ActionTerminateListene
 	}
 	public void onTermination() {
 		threadIsAlive = false;
-		
 	}
 
 	

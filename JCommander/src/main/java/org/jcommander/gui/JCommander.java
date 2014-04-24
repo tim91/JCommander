@@ -72,7 +72,6 @@ public class JCommander {
         JPanel rightPanel = new ContentPanel(new BorderLayout(),ContentPanel.PanelSide.RIGHT);
         final JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
         		leftPanel, rightPanel);
-        splitPane.setOneTouchExpandable(true);
         splitPane.setDividerLocation(0.5);
         splitPane.setResizeWeight(0.5);
         splitPane.setOneTouchExpandable(false);

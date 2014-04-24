@@ -51,20 +51,24 @@ public class ContentPanel extends JPanel {
 		CustomJTabbedPane tabPanel = new CustomJTabbedPane();
         final FocusListener fl = new ComponentFocused(tabPanel);
 		
-		
+		/*
+		 * combobox na north i to w srodku tez borderlayout
+		 */
+        
 		cc.weightx = 1.0;
         cc.weighty = 1.0;
         cc.fill = GridBagConstraints.BOTH;
 		
-		JPanel navigationPanel = new JPanel();
+//		JPanel navigationPanel = new JPanel(new GridLayout(1, 2));
+		JPanel navigationPanel = new JPanel(new BorderLayout());
 //		navigationPanel.setLayout(new BoxLayout(navigationPanel, BoxLayout.X_AXIS));
-		navigationPanel.setLayout(gridbag);
+//		navigationPanel.setLayout(gridbag);
 		
 //		Device[] petStrings = { new BaseDevice("c", "1000", "392342"),new BaseDevice("d", "453", "234234") };
 //		Object[] paramDisk = new Object[]{"os",179157596,363755516};
 		
 		LocaleParametrizedJLabel diskInformationLabel = new LocaleParametrizedJLabel("label.paramterized.diskInformation");
-		DevicesJComboBox devicesComboBox = new DevicesJComboBox(diskInformationLabel); 
+		DevicesJComboBox devicesComboBox = new DevicesJComboBox(diskInformationLabel);
 //		comboBox.setMinimumSize(new Dimension(0, 0));
 //		comboBox.setMaximumSize(new Dimension(((String)comboBox.getSelectedItem()).length()*5, comboBox.getHeight()));
 		gridbag.setConstraints(devicesComboBox, cc);
@@ -73,16 +77,17 @@ public class ContentPanel extends JPanel {
 		
 		
 		
-		diskInformationLabel.setMinimumSize(new Dimension(0, 0));
+//		diskInformationLabel.setMinimumSize(new Dimension(0, 0));
+//		JPanel diskInformation = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		JPanel diskInformation = new JPanel(new GridLayout(1,2));
 		diskInformation.add(devicesComboBox);
 		diskInformation.add(diskInformationLabel);
-		diskInformation.setMinimumSize(new Dimension(0, 0));
+//		diskInformation.setMinimumSize(new Dimension(0, 0));
 		
 		gridbag.setConstraints(diskInformation, cc);
 		navigationPanel.add(diskInformation);
 	
-		JPanel pp = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		JPanel pp = new JPanel(new GridLayout(1,2));
 		
 		
 //		navigationPanel.add(Box.createHorizontalStrut(30));
