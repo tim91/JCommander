@@ -13,13 +13,12 @@ public class DeleteDialog extends AbstractDialog {
 	public static int NOT_DELETE = 1;
 	public static int CANCEL = 2;
 	
-	public static int show(List<File> files){
+	public static int show(List<File> files,String key,boolean many){
 		String info = null;
-		if(files.size() == 1){
-			String tpl = LocaleContext.getContext().getBundle().getString("dialog.delete.oneFile.info");
+		String tpl = LocaleContext.getContext().getBundle().getString(key);
+		if(!many){
 			info = String.format(tpl, files.get(0).getPath().getLeaf());
 		}else{
-			String tpl = LocaleContext.getContext().getBundle().getString("dialog.delete.manyFiles.info");
 			info = String.format(tpl, files.size());
 			StringBuilder sb = new StringBuilder(info);
 			for(int i=0;i<files.size();i++){
@@ -46,7 +45,7 @@ public class DeleteDialog extends AbstractDialog {
 			    JOptionPane.QUESTION_MESSAGE,
 			    null,
 			    options,
-			    options[2]);
+			    options[0]);
 		
 		return n;
 	}

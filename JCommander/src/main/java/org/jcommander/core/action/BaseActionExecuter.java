@@ -1,5 +1,7 @@
 package org.jcommander.core.action;
 
+import javax.swing.SwingUtilities;
+
 import org.jcommander.core.ApplicationContext;
 
 
@@ -11,8 +13,10 @@ public class BaseActionExecuter implements ActionExecuter {
 		 * Tutaj moglbym robic jeszcze inne rzeczy
 		 */
 		
+		action.initDialogWindow();
+		
 		try {
-			action.doInBackground();
+			action.execute();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

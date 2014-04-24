@@ -1,10 +1,11 @@
 package org.jcommander.gui.dialog;
 
+import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -12,7 +13,6 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
-import javax.swing.SwingWorker;
 
 import org.apache.log4j.Logger;
 import org.jcommander.core.ApplicationContext;
@@ -20,6 +20,7 @@ import org.jcommander.core.action.AbstractAction;
 import org.jcommander.core.listener.ProcessingFileChangedListener;
 import org.jcommander.gui.locale.components.LocaleJButtonForBottomPanel;
 import org.jcommander.gui.locale.components.LocaleJLabel;
+import org.jcommander.gui.locale.components.LocaleProgressJLabel;
 import org.jcommander.model.File;
 
 public class ProgressDialog extends JDialog implements
@@ -28,8 +29,27 @@ public class ProgressDialog extends JDialog implements
 	static Logger logger = Logger
 			.getLogger("org.jcommander.gui.dialog.ProgressDialog");
 	
-	private JProgressBar pbProgress;
-
+	private final JProgressBar pbProgress;
+	private final LocaleProgressJLabel from;
+	private final LocaleProgressJLabel to;
+	private final String fromBaseText;
+	private final String toBaseText;
+	
+	public void setFrom(String fromS){
+		from.setText(fromBaseText + " " + fromS);
+		repaint();
+	}
+	
+	public void setTo(String toS){
+		to.setText(toBaseText + " " + toS);
+		repaint();
+	}
+	
+	public void setProgress(int val){
+		pbProgress.setValue(val);
+		pbProgress.repaint();
+	}
+	
 	public ProgressDialog(final AbstractAction worker,String headerProperty) {
 
 		super(ApplicationContext.getInstance().getMainApplicationWindow());
@@ -37,14 +57,8 @@ public class ProgressDialog extends JDialog implements
 		this.setTitle(parent.getTitle());
 		this.setIconImage(parent.getIconImage());
 		
-		JPanel panel = new JPanel();
-		
-//		BoxLayout boxl = new BoxLayout(panel,BoxLayout.PAGE_AXIS);
-//		panel.setLayout(boxl);
-		
-		GridLayout grid = new GridLayout(3,1);
-		panel.setLayout(grid);
-		
+		JPanel panel = new JPanel(new BorderLayout());
+
 		
 		JPanel headerPanel = new JPanel();
 		BoxLayout bl = new BoxLayout(headerPanel,BoxLayout.X_AXIS);
@@ -57,15 +71,21 @@ public class ProgressDialog extends JDialog implements
 		
 		JPanel fromToPanel = new JPanel();
 		fromToPanel.setLayout(new GridLayout(2,1));
-		final LocaleJLabel from = new LocaleJLabel("dialog.prograss.from");
-		final String fromBaseText = from.getText();
+		from = new LocaleProgressJLabel("dialog.prograss.from");
+		fromBaseText = from.getText();
 		from.setAlignmentX(LEFT_ALIGNMENT);
-		final LocaleJLabel to = new LocaleJLabel("dialog.prograss.to");
-		final String toBaseText = to.getText();
+		to = new LocaleProgressJLabel("dialog.prograss.to");
+		toBaseText = to.getText();
 		to.setAlignmentX(LEFT_ALIGNMENT);
 		
 		fromToPanel.add(from);
 		fromToPanel.add(to);
+		
+		JPanel center = new JPanel(new GridLayout(2,1));
+		center.add(fromToPanel);
+		pbProgress = new JProgressBar();
+		
+		center.add(pbProgress);
 		
 		LocaleJButtonForBottomPanel cancelButton = new LocaleJButtonForBottomPanel(
 				"dialog.cancel");
@@ -73,36 +93,77 @@ public class ProgressDialog extends JDialog implements
 		cancelButton.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
-				worker.terminate();
+				worker.cancel(true);
+				setVisible(false);
 			}
 		});
 		
-		pbProgress = new JProgressBar();
 		
-		panel.add(headerPanel);
-		panel.add(fromToPanel);
-		panel.add(cancelButton);
+		
+		panel.add(headerPanel,BorderLayout.NORTH);
+		panel.add(center,BorderLayout.CENTER);
+		panel.add(cancelButton,BorderLayout.SOUTH);
 		
 		this.add(panel);
 		this.setSize(300, 200);
 		this.setLocationRelativeTo(parent);
-		this.setAlwaysOnTop(true);
-		worker.addPropertyChangeListener(new PropertyChangeListener() {
-			public void propertyChange(PropertyChangeEvent evt) {
-				String name = evt.getPropertyName();
-				logger.debug(name);
-				if (name.equals("pathFrom")) {
-					String f = (String) evt.getNewValue();
-					from.setText(fromBaseText + " " + f);
-					repaint();
-				} else if (name.equals("pathTo")) {
-					String t = (String) evt.getNewValue();
-					to.setText(toBaseText + " " + t);
-					repaint();
-				}
+		this.addWindowListener(new WindowListener() {
+			
+			public void windowOpened(WindowEvent arg0) {
+				// TODO Auto-generated method stub
+				
 			}
-
+			
+			public void windowIconified(WindowEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			public void windowDeiconified(WindowEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			public void windowDeactivated(WindowEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			public void windowClosing(WindowEvent arg0) {
+				worker.cancel(true);
+			}
+			
+			public void windowClosed(WindowEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			public void windowActivated(WindowEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
 		});
+//		worker.addPropertyChangeListener(new PropertyChangeListener() {
+//			public void propertyChange(PropertyChangeEvent evt) {
+//				String name = evt.getPropertyName();
+//				logger.debug(name);
+//				if (name.equals("pathFrom")) {
+//					String f = (String) evt.getNewValue();
+//					from.setText(fromBaseText + " " + f);
+//					repaint();
+//				} else if (name.equals("pathTo")) {
+//					String t = (String) evt.getNewValue();
+//					to.setText(toBaseText + " " + t);
+//					repaint();
+//				}else if (name.equals("statusBarPos")) {
+//					Integer v = (Integer) evt.getNewValue();
+//					pbProgress.setValue(v.intValue());
+//					pbProgress.repaint();
+//					repaint();
+//				}
+//			}
+//
+//		});
 	}
 
 	public void onProcessingFileChanged(File file) {
@@ -111,26 +172,5 @@ public class ProgressDialog extends JDialog implements
 		 */
 	}
 
-	private class ProgressWorker extends SwingWorker<Object, Object> {
-
-		@Override
-		protected Object doInBackground() throws Exception {
-			int i = 0;
-			int max = 2000;
-
-			while (i < max) {
-				i += 10;
-				int progress = Math.round(((float) i / (float) max) * 100f);
-				setProgress(progress);
-				try {
-					Thread.sleep(25);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-
-			return null;
-		}
-	}
 
 }

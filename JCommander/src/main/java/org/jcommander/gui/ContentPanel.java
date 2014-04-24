@@ -3,22 +3,17 @@ package org.jcommander.gui;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.LayoutManager;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.List;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
 import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -27,6 +22,7 @@ import org.jcommander.core.ApplicationContext;
 import org.jcommander.core.initializer.InitializerService;
 import org.jcommander.core.initializer.JCommanderInitializer;
 import org.jcommander.core.util.ColorUtils;
+import org.jcommander.gui.locale.components.LocaleJLabel;
 import org.jcommander.gui.locale.components.LocaleParametrizedJLabel;
 import org.jcommander.model.DirectoryTableModel;
 import org.jcommander.model.Path;
@@ -45,9 +41,6 @@ public class ContentPanel extends JPanel {
 		super(arg0);
 		
 		this.panelSide = side;
-		final GridBagLayout gridbag = new GridBagLayout();
-		final GridBagConstraints cc = new GridBagConstraints();
-		
 		CustomJTabbedPane tabPanel = new CustomJTabbedPane();
         final FocusListener fl = new ComponentFocused(tabPanel);
 		
@@ -55,56 +48,21 @@ public class ContentPanel extends JPanel {
 		 * combobox na north i to w srodku tez borderlayout
 		 */
         
-		cc.weightx = 1.0;
-        cc.weighty = 1.0;
-        cc.fill = GridBagConstraints.BOTH;
-		
-//		JPanel navigationPanel = new JPanel(new GridLayout(1, 2));
-		JPanel navigationPanel = new JPanel(new BorderLayout());
-//		navigationPanel.setLayout(new BoxLayout(navigationPanel, BoxLayout.X_AXIS));
-//		navigationPanel.setLayout(gridbag);
-		
-//		Device[] petStrings = { new BaseDevice("c", "1000", "392342"),new BaseDevice("d", "453", "234234") };
-//		Object[] paramDisk = new Object[]{"os",179157596,363755516};
+		JPanel navigationPanel = new JPanel();
+		BoxLayout bl = new BoxLayout(navigationPanel,BoxLayout.X_AXIS);
 		
 		LocaleParametrizedJLabel diskInformationLabel = new LocaleParametrizedJLabel("label.paramterized.diskInformation");
 		DevicesJComboBox devicesComboBox = new DevicesJComboBox(diskInformationLabel);
-//		comboBox.setMinimumSize(new Dimension(0, 0));
-//		comboBox.setMaximumSize(new Dimension(((String)comboBox.getSelectedItem()).length()*5, comboBox.getHeight()));
-		gridbag.setConstraints(devicesComboBox, cc);
 		
-//		navigationPanel.add(comboBox);
-		
+		JPanel diskInformation = new JPanel(new BorderLayout());
+		navigationPanel.add(devicesComboBox);
+		navigationPanel.add(diskInformationLabel);
 		
 		
-//		diskInformationLabel.setMinimumSize(new Dimension(0, 0));
-//		JPanel diskInformation = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		JPanel diskInformation = new JPanel(new GridLayout(1,2));
-		diskInformation.add(devicesComboBox);
-		diskInformation.add(diskInformationLabel);
-//		diskInformation.setMinimumSize(new Dimension(0, 0));
-		
-		gridbag.setConstraints(diskInformation, cc);
-		navigationPanel.add(diskInformation);
-	
-		JPanel pp = new JPanel(new GridLayout(1,2));
-		
-		
-//		navigationPanel.add(Box.createHorizontalStrut(30));
-		
-		JSeparator separator = new JSeparator(SwingConstants.VERTICAL);
-        Dimension d = separator.getPreferredSize();
-        d.height = diskInformation.getPreferredSize().height;
-        separator.setPreferredSize(d);
-        pp.add(separator);
-        JButton rootButton = new JButton("\\");
+		JButton rootButton = new JButton("\\");
         JButton upButton = new JButton("..");
-        pp.add(rootButton);
-        pp.add(upButton);
-        gridbag.setConstraints(pp, cc);
-        navigationPanel.add(pp);
-        
-//        pp.addFocusListener(fl);
+//		navigationPanel.add(diskInformation);
+//		navigationPanel.add(diskInformation);
         upButton.addFocusListener(fl);
         rootButton.addFocusListener(fl);
         
@@ -122,12 +80,6 @@ public class ContentPanel extends JPanel {
         	paths = initializer.getTabsForRightPanel();
         }
         
-        
-        
-        
-        
-//        devicesComboBox.setTabbedPane(tabPanel);
-        
         for (Path path : paths) {
         	JPanel center = new JPanel(new BorderLayout());
         	JTextField directoryPathTextField = new CustomJTextField();
@@ -137,7 +89,7 @@ public class ContentPanel extends JPanel {
         	
         	LocaleParametrizedJLabel directoryInformation = new LocaleParametrizedJLabel("label.paramterized.directoryInformation");
         	
-        	DirectoryTableModel model = new DirectoryTableModel(path,directoryPathTextField);
+        	DirectoryTableModel model = new DirectoryTableModel(path,directoryPathTextField,directoryInformation);
         	DirectoryViewJTable djt = new DirectoryViewJTable(model);
     		
         	directoryInformation.addFocusListener(fl);
@@ -157,10 +109,6 @@ public class ContentPanel extends JPanel {
              */
     		model.registerDirectoryChangeListener(devicesComboBox);
     		model.registerDirectoryChangeListener(tabPanel);
-//    		devicesComboBox.registerDeviceChangeListener(model);
-    		
-    		
-    		
             tabPanel.addTab(path.getLeafInLowerCase(), center);
             
             

@@ -6,25 +6,30 @@ import javax.swing.SwingUtilities;
 import org.jcommander.gui.locale.LocaleChangeListener;
 import org.jcommander.gui.locale.LocaleContext;
 
-public class LocaleJLabel extends JLabel implements LocaleChangeListener {
+public class LocaleProgressJLabel extends JLabel implements
+		LocaleChangeListener {
 
 	String key = null;
+
+	String baseVal = null;
 	
-	public LocaleJLabel(String key) {
+	public LocaleProgressJLabel(String key) {
 		super(LocaleContext.getContext().getBundle().getString(key));
 		this.key = key;
 		LocaleContext.getContext().addContextChangeListener(this);
-	}
-	
-	public void localeChanged() {
-		SwingUtilities.invokeLater(new Runnable() {
-			
-			public void run() {
-				setText(LocaleContext.getContext().getBundle().getString(key));
-			}
-		});
-		
-		
+		baseVal = LocaleContext.getContext().getBundle().getString(key);
 	}
 
+	public void localeChanged() {
+		SwingUtilities.invokeLater(new Runnable() {
+
+			public void run() {
+				String prev = getText();
+				prev = prev.replace(baseVal, "");
+				baseVal = LocaleContext.getContext().getBundle().getString(key);
+				setText(baseVal + prev);
+			}
+		});
+
+	}
 }

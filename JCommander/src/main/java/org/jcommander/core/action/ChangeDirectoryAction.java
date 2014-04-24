@@ -17,8 +17,6 @@ public class ChangeDirectoryAction extends AbstractAction{
 	private Path to;
 	private DirectoryTableModel directoryTableModel;
 	
-	
-	
 	public ChangeDirectoryAction(Path from, Path to,
 			DirectoryTableModel directoryTableModel) {
 		super();
@@ -47,4 +45,8 @@ public class ChangeDirectoryAction extends AbstractAction{
 		
 	}
 
+	public void initDialogWindow() {
+		// TODO Auto-generated method stub
+		execute = true;
+	}
 }

@@ -64,5 +64,21 @@ public class ParentDirectory extends BaseFile implements Directory {
 		// TODO Auto-generated method stub
 		return true;
 	}
+	
+	@Override
+	public long getSize() {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException();
+	}
+
+	public int getOnlyFilesNum() {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException();
+	}
+
+	public long getFilesSize() {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException();
+	}
 
 }

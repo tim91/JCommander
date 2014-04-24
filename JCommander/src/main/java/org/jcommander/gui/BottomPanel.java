@@ -1,7 +1,10 @@
 package org.jcommander.gui;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,9 +13,12 @@ import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.Box;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.jcommander.core.ApplicationContext;
@@ -38,10 +44,19 @@ public class BottomPanel extends JPanel {
 		this.setLayout(new GridLayout(2, 1));
 		
 		JPanel top = new JPanel();
-		top.setLayout(new GridLayout(1, 3));
-		top.add(new JLabel("sdfsdf"));
+		top.setLayout(new GridLayout());
+//		top.add(Box.createHorizontalGlue(),BorderLayout.);
+		JLabel ll = new JLabel("c:\\>");
+//		JPanel ppp = new JPanel(new BorderLayout());
+//		ppp.add(ll,BorderLayout.EAST);
 		
-		
+//		ll.setPreferredSize(new Dimension(15,top.getHeight()));
+//		ll.setAlignmentX(RIGHT_ALIGNMENT);
+		top.add(ll,BorderLayout.EAST);
+		JComboBox<String> jcb = new JComboBox<String>();
+		jcb.setEditable(true);
+		jcb.setPreferredSize(new Dimension(300,top.getHeight()));
+		top.add(jcb,BorderLayout.EAST);
 		/*
 		 * Buttons on the buttom
 		 */
@@ -58,7 +73,16 @@ public class BottomPanel extends JPanel {
 				
 				Pair<List<File>, Directory> fromTo = JCommanderUtils.extractFromAndToLocation(panels);
 				
-				AbstractAction copyAction = new CopyAction(fromTo.getLeft(), fromTo.getRight().getPath());
+				final AbstractAction copyAction = new CopyAction(fromTo.getLeft(), fromTo.getRight().getPath());
+				
+//				copyAction.initDialogWindow();
+				
+//				SwingUtilities.invokeLater(new Runnable() {
+//					
+//					public void run() {
+//						copyAction.executeTask();
+//					}
+//				});
 				
 				ActionService.getInstance().getActionExecuter().executeAction(copyAction);
 				

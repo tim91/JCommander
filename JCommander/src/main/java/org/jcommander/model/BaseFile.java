@@ -10,7 +10,6 @@ import org.jcommander.model.column.LocaleDateColumn;
 
 public class BaseFile implements File{
 
-	
 	protected String name;
 	protected String extension;
 	protected long size;
@@ -53,5 +52,10 @@ public class BaseFile implements File{
 	public boolean isDirectory() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	public long getSize() {
+		// TODO Auto-generated method stub
+		return this.size;
 	}
 }

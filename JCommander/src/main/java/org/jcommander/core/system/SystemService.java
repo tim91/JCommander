@@ -5,6 +5,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
+import java.nio.file.Paths;
+import java.nio.file.attribute.DosFileAttributes;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -13,6 +17,8 @@ import javax.swing.Icon;
 import javax.swing.filechooser.FileSystemView;
 
 import org.apache.log4j.Logger;
+import org.jcommander.core.action.AbstractAction;
+import org.jcommander.core.action.CopyAction;
 import org.jcommander.core.util.JCommanderUtils;
 import org.jcommander.model.BaseDevice;
 import org.jcommander.model.BaseDirectory;
@@ -179,7 +185,30 @@ public class SystemService {
 			if (file.isHidden())
 				continue;
 
+			
+			
+			try {
+				java.nio.file.Path symLinkDirectory = Paths.get(file.getAbsolutePath());
+				DosFileAttributes dosFileAttributes = Files.readAttributes(symLinkDirectory, DosFileAttributes.class,LinkOption.NOFOLLOW_LINKS);
+				
+				if(dosFileAttributes.isSymbolicLink()){
+					continue;
+				}
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 			if (file.isDirectory()) {
+//				try {
+//					if(isSymlink(file))
+//						continue;
+//				} catch (IOException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+				
 				ff = new BaseDirectory(name, file.lastModified(), "---",
 						new BasePath(file.getAbsolutePath(), device),
 						this.fileSystemView.getSystemIcon(file));
@@ -208,13 +237,27 @@ public class SystemService {
 		return dir;
 	}
 
+	
+	private static boolean isSymlink(File file) throws IOException {
+		  if (file == null)
+		    throw new NullPointerException("File must not be null");
+		  File canon;
+		  if (file.getParent() == null) {
+		    canon = file;
+		  } else {
+		    File canonDir = file.getParentFile().getCanonicalFile();
+		    canon = new File(canonDir, file.getName());
+		  }
+		  return !canon.getCanonicalFile().equals(canon.getAbsoluteFile());
+		}
+	
 	private int BUFFER_SIZE = 1024;
 
-	public boolean copyDirectory(File from, File to, byte[] buffer, Boolean threadAlive) {
+	public boolean copyDirectory(File from, File to, byte[] buffer,AbstractAction progressListener) {
 		//
 		// System.out.println("copyDirectory("+from+","+to+")");
 
-		if(threadAlive.booleanValue() == false){
+		if(progressListener.isCancelled() == true){
 			return false;
 		}
 		
@@ -247,10 +290,10 @@ public class SystemService {
 				File entry = new File(from, fileName);
 
 				if (entry.isDirectory()) {
-					if (!copyDirectory(entry, new File(to, fileName), buffer,threadAlive))
+					if (!copyDirectory(entry, new File(to, fileName), buffer,progressListener))
 						return false;
 				} else {
-					if (!copyFile(entry, new File(to, fileName), buffer,threadAlive))
+					if (!copyFile(entry, new File(to, fileName), buffer,progressListener))
 						return false;
 				}
 			}
@@ -258,15 +301,15 @@ public class SystemService {
 		return true;
 	}
 
-	public boolean copyFile(File from, File to,Boolean threadAlive) {
-		return copyFile(from, to, (byte[]) null,threadAlive);
+	public boolean copyFile(File from, File to,AbstractAction progressListener) {
+		return copyFile(from, to, (byte[]) null,progressListener);
 	}
 
-	public boolean copyFile(File from, File to, byte[] buf,Boolean threadAlive) {
+	public boolean copyFile(File from, File to, byte[] buf,AbstractAction progressListener) {
 		if (buf == null)
 			buf = new byte[BUFFER_SIZE];
 
-		if(threadAlive.booleanValue() == false){
+		if(progressListener.isCancelled() == true){
 			return false;
 		}
 		
@@ -281,12 +324,14 @@ public class SystemService {
 			
 			for (int bytesRead = from_s.read(buf); bytesRead != -1; bytesRead = from_s
 					.read(buf)){
-				if(threadAlive.booleanValue() == false){
+				if(progressListener.isCancelled() == true){
 					// Delete this file
 					operationTerminated = true;
 					break;
 				}
 				to_s.write(buf, 0, bytesRead);
+				((CopyAction)progressListener).onOperationProgressChange(bytesRead);
+//				progressListener.sendChunk(bytesRead);
 			}
 				
 
@@ -321,9 +366,9 @@ public class SystemService {
 		return true;
 	}
 
-	public static void deleteDirectory(File file, Boolean threadAlive) {
+	public static void deleteDirectory(File file, AbstractAction progressListener) {
 		
-		if(threadAlive.booleanValue() == false){
+		if(progressListener.isCancelled() == true){
 			return;
 		}
 		
@@ -346,9 +391,9 @@ public class SystemService {
 					File fileDelete = new File(file, temp);
 
 					// recursive delete
-					deleteDirectory(fileDelete,threadAlive);
+					deleteDirectory(fileDelete,progressListener);
 					
-					if(threadAlive.booleanValue() == false){
+					if(progressListener.isCancelled() == true){
 						return;
 					}
 					

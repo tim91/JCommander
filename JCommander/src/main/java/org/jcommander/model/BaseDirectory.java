@@ -6,6 +6,7 @@ import java.util.List;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
+import org.jcommander.core.comparator.DirectoryTableRowComparatorService;
 import org.jcommander.core.image.ImageService;
 import org.jcommander.model.column.BaseExtensionColumn;
 import org.jcommander.model.column.BaseIconAndStringColumn;
@@ -13,6 +14,9 @@ import org.jcommander.model.column.DirectorySizeColumn;
 import org.jcommander.model.column.LocaleDateColumn;
 
 public class BaseDirectory extends BaseFile implements Directory {
+	
+	private int dirNum = 0;
+	private long filesSize = 0;
 	
 	public BaseDirectory(String name,
 			long lastModifiedDate, String attribiute,Path path,Icon icon) {
@@ -27,7 +31,7 @@ public class BaseDirectory extends BaseFile implements Directory {
 	private List<File> files = new ArrayList<File>();
 	
 	public int getDirectoriesNum() {
-		return 0;
+		return dirNum;
 	}
 
 	public int getElements() {
@@ -41,12 +45,22 @@ public class BaseDirectory extends BaseFile implements Directory {
 	}
 
 	public void addFile(File f) {
-		this.files.add(f);
-		
+		addFile(f, -1);
 	}
 	
 	public void addFile(File f,int idx) {
-		this.files.add(idx,f);
+		if(f instanceof Directory){
+			dirNum++;
+		}else{
+			this.filesSize += f.getSize();
+		}
+		
+		if(idx == -1){
+			this.files.add(f);
+		}else{
+			this.files.add(idx,f);
+		}
+		
 		
 	}
 
@@ -69,6 +83,22 @@ public class BaseDirectory extends BaseFile implements Directory {
 	public boolean isDirectory() {
 		// TODO Auto-generated method stub
 		return true;
+	}
+
+	public int getOnlyFilesNum() {
+		// TODO Auto-generated method stub
+		return this.files.size() - dirNum;
+	}
+
+	public long getFilesSize() {
+		// TODO Auto-generated method stub
+		return filesSize;
+	}
+	
+	@Override
+	public long getSize() {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException();
 	}
 	
 }

@@ -26,4 +26,9 @@ public class OpenFileAction extends AbstractAction {
 
 	}
 
+	public void initDialogWindow() {
+		// TODO Auto-generated method stub
+		execute = true;
+	}
+
 }

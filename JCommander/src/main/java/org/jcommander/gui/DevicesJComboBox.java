@@ -59,8 +59,7 @@ public class DevicesJComboBox extends JComboBox<Device> implements DirectoryChan
 		this.addItemListener(new DeviceChangedListener());
 		this.addPopupMenuListener(new DeviceListPopup());
 		this.setBackground(Color.WHITE);
-		this.setMaximumSize(new Dimension(10,20));
-		this.setPreferredSize(new Dimension(10,20));
+		this.setPreferredSize(new Dimension(50,20));
 		this.setPrototypeDisplayValue(new PrototypeDevice());
 		this.setOpaque(true);
 		
@@ -87,11 +86,13 @@ public class DevicesJComboBox extends JComboBox<Device> implements DirectoryChan
 				setIcon(device.getIcon());
 				
 				String text = null;
-				if(index > -1){
-					text = device.toString() + "   | " + device.getDeviceName().toUpperCase();
-				}else{
-					text = device.toString();
-				}
+//				if(index > -1){
+//					text = device.toString() + "   | " + device.getDeviceName().toUpperCase();
+//				}else{
+//					text = device.toString();
+//				}
+				
+				text = device.toString();
 				
 				setText(text);
 				

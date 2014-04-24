@@ -7,14 +7,9 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.JTextField;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.TableColumnModelEvent;
-import javax.swing.event.TableColumnModelListener;
 import javax.swing.table.AbstractTableModel;
 
 import org.apache.log4j.Logger;
-import org.jcommander.core.action.Action;
 import org.jcommander.core.action.ActionExecuter;
 import org.jcommander.core.action.ActionService;
 import org.jcommander.core.action.ChangeDirectoryAction;
@@ -24,6 +19,7 @@ import org.jcommander.core.listener.DirectoryContentChangeListener;
 import org.jcommander.core.system.SystemService;
 import org.jcommander.gui.locale.LocaleChangeListener;
 import org.jcommander.gui.locale.LocaleContext;
+import org.jcommander.gui.locale.components.LocaleParametrizedJLabel;
 import org.jcommander.model.column.AttributeColumn;
 import org.jcommander.model.column.ExtensionColumn;
 import org.jcommander.model.column.IconAndStringColumn;
@@ -40,6 +36,8 @@ public class DirectoryTableModel extends AbstractTableModel implements LocaleCha
 		"table.column.date"};
 	
 	public static String DIRECTORY_SIZE = "<DIR>";
+	
+	private LocaleParametrizedJLabel folderInfo;
 	
 	private List<DirectoryContentChangeListener> directoryContentChangeListeners = new ArrayList<DirectoryContentChangeListener>();
 	
@@ -70,10 +68,10 @@ public class DirectoryTableModel extends AbstractTableModel implements LocaleCha
     	colIndexToClass.put(4, AttributeColumn.class);
     }
 	
-	public DirectoryTableModel(Path path,JTextField directoryPathTextBox) {
+	public DirectoryTableModel(Path path,JTextField directoryPathTextBox,LocaleParametrizedJLabel folderInfo) {
 		
 		LocaleContext.getContext().addContextChangeListener(this);
-		
+		this.folderInfo = folderInfo;
 		this.directoryPathTextBox = directoryPathTextBox;
 		
 		try {
@@ -99,9 +97,20 @@ public class DirectoryTableModel extends AbstractTableModel implements LocaleCha
     	Path p = this.directory.getPath();
     	
     	this.directoryPathTextBox.setText(p.getInTotalCommanderStyle());
-    	
+    	this.folderInfo.setValues(getDirInfo());
     	
     	super.fireTableDataChanged();
+    }
+    
+    private Object [] getDirInfo(){
+    	Object[] o = new Object[6];
+    	o[0] = 0;
+    	o[1] = this.directory.getFilesSize();
+    	o[2] = 0;
+    	o[3] = this.directory.getOnlyFilesNum();
+    	o[4] = 0;
+    	o[5] = this.directory.getDirectoriesNum();
+    	return o;
     }
     
     /*
@@ -179,8 +188,9 @@ public class DirectoryTableModel extends AbstractTableModel implements LocaleCha
 	
     @Override
     public String getColumnName(int column) {
-    	logger.debug("Pobieram kolumne : " + column);
-    	return LocaleContext.getContext().getBundle().getString(COLUMNS[column]);
+    	String name = LocaleContext.getContext().getBundle().getString(COLUMNS[column]);
+    	logger.debug("Pobieram kolumne : " + column + " nazwa : " + name);
+    	return name;
     }
     
     @Override
@@ -196,6 +206,7 @@ public class DirectoryTableModel extends AbstractTableModel implements LocaleCha
 //			this.getColumnModel().getColumn(i).setHeaderValue(val);
 //		}
 		fireTableDataChanged();
+		fireTableStructureChanged();
 	}
     
 	

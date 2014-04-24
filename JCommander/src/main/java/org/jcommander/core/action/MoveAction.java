@@ -1,19 +1,18 @@
 package org.jcommander.core.action;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.jcommander.core.ApplicationContext;
-import org.jcommander.core.listener.ActionTerminateListener;
+import org.jcommander.gui.dialog.OverrideDialog;
+import org.jcommander.gui.dialog.ProgressDialog;
 import org.jcommander.model.Directory;
 import org.jcommander.model.File;
 import org.jcommander.model.ParentDirectory;
 import org.jcommander.model.Path;
 
-public class MoveAction extends AbstractAction implements ActionTerminateListener {
+public class MoveAction extends AbstractAction {
 
 	static Logger logger = Logger
 			.getLogger("org.jcommander.core.action.MoveAction");
@@ -25,62 +24,100 @@ public class MoveAction extends AbstractAction implements ActionTerminateListene
 		super();
 		this.toMove = toMove;
 		this.destination = destination;
+		
 	}
 	public void executeTask() {
 		
-		if(toMove.size() == 0 || (toMove.size() == 1 && toMove.get(0) instanceof ParentDirectory)){
-			/*
-			 * Not selected files
-			 */
-			showNoFileSelectedDialog();
-			return;
-		}
-		
 		java.io.File toDirectory = new java.io.File(destination.toString());
-		
+		boolean overrideAll = false;
 		for(File f : toMove ){
 			
 			if(f instanceof ParentDirectory)
 				continue;
 			
-			if(threadIsAlive == false){
+			if(isCancelled() == true){
 				break;
 			}
 			
 			java.io.File from = new java.io.File(f.getPath().toString());
 			java.io.File to = new java.io.File(toDirectory.getAbsolutePath() + "\\" + f.getPath().getLeaf());
+			
+			if(to.exists() && overrideAll == false){
+				int resp = OverrideDialog.show(to.getAbsolutePath(), from.getAbsolutePath());
+				
+				if(resp == OverrideDialog.OVERRIDE_ALL){
+					overrideAll = true;
+				}
+				else if(resp == OverrideDialog.NOT_OVERRIDE){
+					continue;
+				}
+				else if(resp == OverrideDialog.CANCEL){
+					done();
+					return;
+				}
+			}
+			
+			
+			pd.setFrom(from.getAbsolutePath());
+			pd.setTo(to.getAbsolutePath());
+			
 			if(f instanceof Directory){
-				boolean status = systemService.copyDirectory(from,to, null,threadIsAlive);
+				boolean status = systemService.copyDirectory(from,to, null,this);
 				if(status == true){
-//					try {
-						systemService.deleteDirectory(from, threadIsAlive);
-//					} catch (IOException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//						status = false;
-//					}
+						systemService.deleteDirectory(from, this);
 				}
 				logger.debug("Status przenoszenia folderu " + status);
 			}else{
-				boolean status = systemService.copyFile(from, to,threadIsAlive);
+				boolean status = systemService.copyFile(from, to,this);
 				if(status == true){
 					status = from.delete();
 				}
 				logger.debug("Status przenoszenia pliku " + status);
 			}
 			
+			refreshTable();
+		}
+		pd.setVisible(false);
+		done();
+		
+	}
+	
+	public void initDialogWindow() {
+		if(toMove.size() == 0 || (toMove.size() == 1 && toMove.get(0) instanceof ParentDirectory)){
+			/*
+			 * Not selected files
+			 */
+			showNoFileSelectedDialog();
+			execute =  false;
+			return;
 		}
 		
-		/*
-		 * Refresh table with directory view after finished action
-		 */
+		pd = new ProgressDialog(this,"dialog.progress.move.header");
+		pd.setVisible(true);
 		
-		ApplicationContext.getInstance().refreshTabbedPanels();
+		execute = true;
+		return;
 		
-	}
-	public void onTermination() {
-		threadIsAlive = false;
 	}
 
+	private void onOperationProgressChange(int bytesProcessed) {
+		
+		logger.debug("Przekopiowalem: " + bytesProcessed);
+		copied += bytesProcessed;
+		int val = (int) (copied * 100 / bytesToCopy);
+		logger.debug(val);
+		statusBarPos = val;
+		pd.setProgress(statusBarPos.intValue());
+		
+	}
+	
+	
+	@Override
+	protected void process(List<Integer> chunks) {
+		
+		for (Integer integer : chunks) {
+			onOperationProgressChange(integer);
+		}
+	}
 	
 }
