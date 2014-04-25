@@ -45,7 +45,7 @@ public class DevicesJComboBox extends JComboBox<Device> implements DirectoryChan
 	protected Path actualVisitingPath = null;
 	
 	public DevicesJComboBox(LocaleParametrizedJLabel deviceDescription) {
-//		super();
+		super();
 		
 		
 		
@@ -57,11 +57,11 @@ public class DevicesJComboBox extends JComboBox<Device> implements DirectoryChan
 		 */
 		
 		this.addItemListener(new DeviceChangedListener());
-		this.addPopupMenuListener(new DeviceListPopup());
+//		this.addPopupMenuListener(new DeviceListPopup());
 		this.setBackground(Color.WHITE);
-		this.setPreferredSize(new Dimension(50,20));
-		this.setPrototypeDisplayValue(new PrototypeDevice());
-		this.setOpaque(true);
+//		this.setPreferredSize(new Dimension(50,20));
+//		this.setPrototypeDisplayValue(new PrototypeDevice());
+//		this.setOpaque(true);
 		
 		this.comboBox = this;
 		this.devicedescriptionLabel = deviceDescription;

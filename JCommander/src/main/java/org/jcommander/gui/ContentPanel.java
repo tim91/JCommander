@@ -1,16 +1,13 @@
 package org.jcommander.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.LayoutManager;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.List;
 
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JLabel;
+import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
@@ -22,7 +19,6 @@ import org.jcommander.core.ApplicationContext;
 import org.jcommander.core.initializer.InitializerService;
 import org.jcommander.core.initializer.JCommanderInitializer;
 import org.jcommander.core.util.ColorUtils;
-import org.jcommander.gui.locale.components.LocaleJLabel;
 import org.jcommander.gui.locale.components.LocaleParametrizedJLabel;
 import org.jcommander.model.DirectoryTableModel;
 import org.jcommander.model.Path;
@@ -48,21 +44,16 @@ public class ContentPanel extends JPanel {
 		 * combobox na north i to w srodku tez borderlayout
 		 */
         
-		JPanel navigationPanel = new JPanel();
-		BoxLayout bl = new BoxLayout(navigationPanel,BoxLayout.X_AXIS);
+		JPanel navigationPanel = new JPanel(new BorderLayout());
 		
 		LocaleParametrizedJLabel diskInformationLabel = new LocaleParametrizedJLabel("label.paramterized.diskInformation");
 		DevicesJComboBox devicesComboBox = new DevicesJComboBox(diskInformationLabel);
-		
-		JPanel diskInformation = new JPanel(new BorderLayout());
-		navigationPanel.add(devicesComboBox);
+		navigationPanel.add(devicesComboBox,BorderLayout.WEST);
 		navigationPanel.add(diskInformationLabel);
 		
 		
 		JButton rootButton = new JButton("\\");
         JButton upButton = new JButton("..");
-//		navigationPanel.add(diskInformation);
-//		navigationPanel.add(diskInformation);
         upButton.addFocusListener(fl);
         rootButton.addFocusListener(fl);
         

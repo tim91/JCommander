@@ -15,6 +15,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -30,6 +31,7 @@ import org.jcommander.core.action.ActionService;
 import org.jcommander.core.action.ChangeDirectoryAction;
 import org.jcommander.core.action.OpenFileAction;
 import org.jcommander.core.comparator.DirectoryTableRowComparatorService;
+import org.jcommander.gui.locale.LocaleContext;
 import org.jcommander.model.Directory;
 import org.jcommander.model.DirectoryRowSorter;
 import org.jcommander.model.DirectoryTableModel;
@@ -229,8 +231,17 @@ public class DirectoryViewJTable extends JTable {
 	        TableCellRenderer renderer, int row, int column)
 	    {
 	        Component c = super.prepareRenderer(renderer, row, column);
+	        logger.debug("row: " + row);
+	        int row1 = row;
+	        try{
+	        	row1 = convertRowIndexToView(row);
+	        }catch(Exception e){
+	        	String info = LocaleContext.getContext().getBundle().getString("dialog.directory.problem.info");
+				JOptionPane.showMessageDialog(ApplicationContext.getInstance().getMainApplicationWindow(),
+						info);
+//				return c ;
+	        }
 	        
-	        int row1 = convertRowIndexToView(row);
 	        
 	        DirectoryTableModel dtm = (DirectoryTableModel) getModel();
 	        Object o =  dtm.getValueAt(row1, column);

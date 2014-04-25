@@ -14,12 +14,15 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.Icon;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileSystemView;
 
 import org.apache.log4j.Logger;
+import org.jcommander.core.ApplicationContext;
 import org.jcommander.core.action.AbstractAction;
 import org.jcommander.core.action.CopyAction;
 import org.jcommander.core.util.JCommanderUtils;
+import org.jcommander.gui.locale.LocaleContext;
 import org.jcommander.model.BaseDevice;
 import org.jcommander.model.BaseDirectory;
 import org.jcommander.model.BaseFile;
@@ -168,7 +171,16 @@ public class SystemService {
 				new BasePath(f.getAbsolutePath(), device),
 				this.fileSystemView.getSystemIcon(f));
 
-		File[] files = f.listFiles();
+		File[] files = null;
+		try{
+			files = f.listFiles();
+		}catch(Exception e){
+			String info = LocaleContext.getContext().getBundle().getString("dialog.directory.problem.info");
+			JOptionPane.showMessageDialog(ApplicationContext.getInstance().getMainApplicationWindow(),
+					info);
+			return dir;
+		}
+		
 		for (File file : files) {
 
 			org.jcommander.model.File ff = null;
