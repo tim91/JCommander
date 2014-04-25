@@ -21,6 +21,7 @@ import org.apache.log4j.Logger;
 import org.jcommander.core.ApplicationContext;
 import org.jcommander.core.action.AbstractAction;
 import org.jcommander.core.action.CopyAction;
+import org.jcommander.core.action.MoveAction;
 import org.jcommander.core.util.JCommanderUtils;
 import org.jcommander.gui.locale.LocaleContext;
 import org.jcommander.model.BaseDevice;
@@ -92,6 +93,7 @@ public class SystemService {
 
 			if (deviceName == null || deviceName.length() == 0)
 				continue;
+			
 
 			String label = JCommanderUtils.ExtractDeviceLabel(deviceName);
 			String name = JCommanderUtils.ExtractDeviceName(deviceName);
@@ -203,7 +205,7 @@ public class SystemService {
 				java.nio.file.Path symLinkDirectory = Paths.get(file.getAbsolutePath());
 				DosFileAttributes dosFileAttributes = Files.readAttributes(symLinkDirectory, DosFileAttributes.class,LinkOption.NOFOLLOW_LINKS);
 				
-				if(dosFileAttributes.isSymbolicLink()){
+				if(dosFileAttributes.isOther()){
 					continue;
 				}
 				
@@ -342,7 +344,12 @@ public class SystemService {
 					break;
 				}
 				to_s.write(buf, 0, bytesRead);
-				((CopyAction)progressListener).onOperationProgressChange(bytesRead);
+				if(progressListener instanceof CopyAction){
+					((CopyAction)progressListener).onOperationProgressChange(bytesRead);
+				}else if(progressListener instanceof MoveAction){
+					((MoveAction)progressListener).onOperationProgressChange(bytesRead);
+				}
+//				((CopyAction)progressListener).onOperationProgressChange(bytesRead);
 //				progressListener.sendChunk(bytesRead);
 			}
 				
@@ -378,6 +385,18 @@ public class SystemService {
 		return true;
 	}
 
+	public static long getFolderSize(File dir) {
+	    long size = 0;
+	    for (File file : dir.listFiles()) {
+	        if (file.isFile()) {
+	            size += file.length();
+	        }
+	        else
+	            size += getFolderSize(file);
+	    }
+	    return size;
+	}
+	
 	public static void deleteDirectory(File file, AbstractAction progressListener) {
 		
 		if(progressListener.isCancelled() == true){

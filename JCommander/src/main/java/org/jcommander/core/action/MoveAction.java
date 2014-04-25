@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.jcommander.core.ApplicationContext;
+import org.jcommander.core.listener.ProcessingFileChangedListener;
 import org.jcommander.gui.dialog.OverrideDialog;
 import org.jcommander.gui.dialog.ProgressDialog;
 import org.jcommander.model.Directory;
@@ -12,7 +13,7 @@ import org.jcommander.model.File;
 import org.jcommander.model.ParentDirectory;
 import org.jcommander.model.Path;
 
-public class MoveAction extends AbstractAction {
+public class MoveAction extends AbstractAction implements ProgressListener  {
 
 	static Logger logger = Logger
 			.getLogger("org.jcommander.core.action.MoveAction");
@@ -30,6 +31,16 @@ public class MoveAction extends AbstractAction {
 		
 		java.io.File toDirectory = new java.io.File(destination.toString());
 		boolean overrideAll = false;
+		
+		for(File f : toMove ){
+			if(!(f instanceof Directory)){
+				bytesToCopy += f.getSize();
+			}else{
+				java.io.File dir = new java.io.File(f.getPath().toString());
+				bytesToCopy += systemService.getFolderSize(dir);
+			}
+		}
+		
 		for(File f : toMove ){
 			
 			if(f instanceof ParentDirectory)
@@ -100,7 +111,7 @@ public class MoveAction extends AbstractAction {
 		
 	}
 
-	private void onOperationProgressChange(int bytesProcessed) {
+	public void onOperationProgressChange(int bytesProcessed) {
 		
 		logger.debug("Przekopiowalem: " + bytesProcessed);
 		copied += bytesProcessed;

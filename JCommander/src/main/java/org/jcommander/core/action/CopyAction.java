@@ -32,6 +32,9 @@ public class CopyAction extends AbstractAction implements ProgressListener {
 		for(File f : toCopy ){
 			if(!(f instanceof Directory)){
 				bytesToCopy += f.getSize();
+			}else{
+				java.io.File dir = new java.io.File(f.getPath().toString());
+				bytesToCopy += systemService.getFolderSize(dir);
 			}
 		}
 		
