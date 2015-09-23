@@ -30,7 +30,7 @@ public class MoveAction extends AbstractAction implements ProgressListener  {
 	public void executeTask() {
 		
 		java.io.File toDirectory = new java.io.File(destination.toString());
-		boolean overrideAll = false;
+		boolean overrideAllNew = false;
 		
 		for(File f : toMove ){
 			if(!(f instanceof Directory)){
@@ -38,6 +38,7 @@ public class MoveAction extends AbstractAction implements ProgressListener  {
 			}else{
 				java.io.File dir = new java.io.File(f.getPath().toString());
 				bytesToCopy += systemService.getFolderSize(dir);
+				//to jest ok, nie wymaga zmian
 			}
 		}
 		
@@ -53,11 +54,11 @@ public class MoveAction extends AbstractAction implements ProgressListener  {
 			java.io.File from = new java.io.File(f.getPath().toString());
 			java.io.File to = new java.io.File(toDirectory.getAbsolutePath() + "\\" + f.getPath().getLeaf());
 			
-			if(to.exists() && overrideAll == false){
+			if(to.exists() && overrideAllNew == false){
 				int resp = OverrideDialog.show(to.getAbsolutePath(), from.getAbsolutePath());
 				
 				if(resp == OverrideDialog.OVERRIDE_ALL){
-					overrideAll = true;
+					overrideAllNew = true;
 				}
 				else if(resp == OverrideDialog.NOT_OVERRIDE){
 					continue;
