@@ -111,4 +111,8 @@ public class JCommanderUtils {
 	public static void newFeature1(){
 		System.out.println("New featore");
 	}
+	
+	public static void newFeature2(){
+		System.out.println("New featore222");
+	}
 }
