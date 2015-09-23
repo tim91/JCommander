@@ -108,4 +108,7 @@ public class JCommanderUtils {
 		return dtm.getDirectory();
 	}
 	
+	public static void newFeature1(){
+		System.out.println("New featore");
+	}
 }
