@@ -60,8 +60,11 @@ public class LocaleUtils {
 					 */
 //					String lan = locale.getDisplayName(LocaleContext.getContext().getLocale());
 //					lan = lan.substring(0, 1).toUpperCase() + lan.substring(1);
-					logger.debug("Znaleziono jezyk: " + locale);
-					languages.add(locale);
+					if(!locale.getDisplayName().isEmpty()){
+						logger.debug("Znaleziono jezyk: " + locale);
+						languages.add(locale);
+					}
+					
 				}
 				
 			} catch (MissingResourceException ex) {
